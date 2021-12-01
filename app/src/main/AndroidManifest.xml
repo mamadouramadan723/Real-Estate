@@ -27,9 +27,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/workspace"
+        android:icon="@drawable/real_estate"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/workspace"
+        android:roundIcon="@drawable/real_estate"
         android:supportsRtl="true"
         android:theme="@style/Theme.RealState">
         <activity
