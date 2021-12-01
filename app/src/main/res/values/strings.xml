@@ -17,7 +17,7 @@
     <string name="_14_m">" m²"</string>
     <string name="_3">3</string>
     <string name="surface">Surface</string>
-    <string name="PLACES_API_KEY">AIzaSyDY2FtmXdlymbdH7vo-lJJAp-F3kpnA7MI</string>
+    <string name="PLACES_API_KEY">myapikey</string>
 
     <!--><-->
     <string name="leku_title_activity_location_picker">Location Picker</string>
