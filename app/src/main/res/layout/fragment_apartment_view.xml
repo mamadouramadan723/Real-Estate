@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="#FFF"
+    app:cardUseCompatPadding="true"
+    app:cardPreventCornerOverlap="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="50dp"
+        app:layout_anchor="@+id/scrollView2"
+        app:layout_anchorGravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/apart_image_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_pager">
+
+            </androidx.viewpager2.widget.ViewPager2>
+
+            <ImageButton
+                android:id="@+id/like_apart_ibtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/apart_image_view_pager"
+                android:layout_alignEnd="@+id/apart_image_view_pager"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/fui_transparent"
+                android:src="@drawable/ic_favorite_appart"
+                android:textColor="@color/black"
+                android:textSize="11sp" />
+
+            <include
+                layout="@layout/raw_apartment_banner_price_score"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/apart_image_view_pager" />
+
+            <LinearLayout
+                android:id="@+id/dots_image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignBottom="@id/apart_image_view_pager"
+                android:background="@color/transparent_70"
+                android:gravity="center"
+                android:orientation="horizontal" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/modify_apart_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/modify"
+                android:visibility="gone"
+                android:backgroundTint="@color/teal_200"
+                android:drawableEnd="@drawable/ic_modify" />
+        </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+    <!-->Contact<-->
+    <LinearLayout
+        android:id="@+id/layout_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:paddingBottom="40dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/contact_by_call_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/white"
+                android:background="@drawable/ic_contact_me"
+                android:drawableStart="@drawable/ic_call"
+                android:text="@string/Call"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/contact_by_message_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/white"
+                android:background="@drawable/ic_contact_me"
+                android:drawableStart="@drawable/ic_whatsapp"
+                android:text="@string/whatsapp"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

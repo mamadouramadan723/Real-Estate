@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.rmd.realstate.ui.home.Fragment_Home"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_filter"
+            app:destination="@id/navigation_filter" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_view_apart"
+            app:destination="@id/navigation_view_apart" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_explorer"
+        android:name="com.rmd.realstate.ui.explore.Fragment_Explorer"
+        android:label="@string/menu_explore"
+        tools:layout="@layout/fragment_explorer" />
+    <fragment
+        android:id="@+id/navigation_view_apart"
+        android:name="com.rmd.realstate.ui.home.detail_view.Fragment_Property_View"
+        android:label="@string/menu_view_apart"
+        tools:layout="@layout/fragment_apartment_view" >
+        <action
+            android:id="@+id/action_navigation_view_apart_to_navigation_post_modify"
+            app:destination="@id/navigation_post_modify" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_post_modify"
+        android:name="com.rmd.realstate.ui.home.detail_view.Fragment_Property_View_Update"
+        android:label="@string/menu_modify"
+        tools:layout="@layout/fragment_post" >
+        <action
+            android:id="@+id/action_navigation_post_modify_to_navigation_view_apart"
+            app:destination="@id/navigation_view_apart" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_post"
+        android:name="com.rmd.realstate.ui.post.Fragment_Post"
+        android:label="@string/menu_post"
+        tools:layout="@layout/fragment_post" >
+        <action
+            android:id="@+id/action_navigation_post_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_saved"
+        android:name="com.rmd.realstate.ui.saved.Fragment_Saved"
+        android:label="@string/menu_saved"
+        tools:layout="@layout/fragment_saved" >
+        <action
+            android:id="@+id/action_navigation_saved_to_navigation_view_apart"
+            app:destination="@id/navigation_view_apart" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.rmd.realstate.ui.profile.Fragment_Profile"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_update_profile"
+            app:destination="@id/navigation_update_profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_update_profile"
+        android:name="com.rmd.realstate.ui.profile.Fragment_Profile_Update"
+        android:label="@string/menu_update_profile"
+        tools:layout="@layout/fragment_profile_update" >
+        <action
+            android:id="@+id/action_navigation_update_profile_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_filter"
+        android:name="com.rmd.realstate.ui.home.filter.Fragment_Filter"
+        android:label="@string/menu_filter"
+        tools:layout="@layout/fragment_filter" >
+        <action
+            android:id="@+id/action_navigation_filter_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+</navigation>

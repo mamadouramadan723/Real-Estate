@@ -1,0 +1,233 @@
+<resources>
+    <string name="app_name">Real Estate</string>
+    <string name="menu_explore">Explore</string>
+    <string name="menu_saved">Saved</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_home">Home</string>
+    <string name="see_more">See More</string>
+    <string name="todo">TODO</string>
+    <string name="homes">Homes</string>
+    <string name="apartments">Apartments</string>
+    <string name="offices">Offices</string>
+    <string name="commerces">Commerces</string>
+    <string name="apartment">Apartment</string>
+    <string name="price_apartment">1.997 USD / Month</string>
+    <string name="location_apartment">1234, Agdal, Rabat</string>
+    <string name="bathrooms">Bathrooms</string>
+    <string name="_14_m">" m²"</string>
+    <string name="_3">3</string>
+    <string name="surface">Surface</string>
+    <string name="PLACES_API_KEY">AIzaSyDY2FtmXdlymbdH7vo-lJJAp-F3kpnA7MI</string>
+
+    <!--><-->
+    <string name="leku_title_activity_location_picker">Location Picker</string>
+    <string name="leku_load_location_error">Something went wrong. Please try again.</string>
+    <string name="leku_no_search_results">There are no results for your search</string>
+    <string name="leku_unknown_location">unknown location</string>
+    <string name="leku_voice_search_promp">Search by voice…</string>
+    <string name="leku_voice_search_extra_language">en-EN</string>
+    <string name="leku_toolbar_action_voice_title">Voice</string>
+    <string name="leku_search_hint">Search</string>
+    <string name="_20">20</string>
+    <string name="dam">" DAM/Month"</string>
+    <string name="property_type">Property Type</string>
+    <string name="office">Office</string>
+    <string name="commerce">Commerce</string>
+    <string name="studio">Studio</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_4">4+</string>
+    <string name="price_monthly">Price Monthly</string>
+    <string name="price">Price :</string>
+    <string name="bedrooms">Bedrooms</string>
+    <string name="property_size">Property Size</string>
+    <string name="size">Size :</string>
+    <string name="facilities">Facilities</string>
+    <string name="bath_place">Bath Place</string>
+    <string name="dinning_room">Dinning Room</string>
+    <string name="bedroom_baby">Bedroom Baby</string>
+    <string name="balcony">Balcony</string>
+    <string name="garage">Garage</string>
+    <string name="tv_room">TV Room</string>
+    <string name="apply_amp_search"><![CDATA[Apply & Search]]></string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_filter">Filter</string>
+    <string name="localization">Localization</string>
+    <string name="region">Region </string>
+    <string name="city">City   </string>
+    <string name="menu_post">Post</string>
+    <string name="commune">Commune</string>
+    <string name="description">Add Description</string>
+    <string name="username">Username</string>
+    <string name="mail">Mail</string>
+    <string name="phoneNumber">Phone Number</string>
+    <string name="modify_profile">Modify Profile</string>
+    <string name="validate_update">Validate Update</string>
+    <string name="email">e-mail</string>
+    <string name="menu_update_profile">Update My Profile</string>
+    <string name="validate">Validate</string>
+    <string name="publish">Publish Now</string>
+    <string name="add_image">Add Images</string>
+    <string name="add_or_change_image">Change Image(s)</string>
+    <string name="selected_image">Selected Images</string>
+    <string name="your_localization_here">Your Localization Here</string>
+    <string name="find_your_rental_home_here">Find Your Rental Home Here</string>
+    <string name="categorie">Categories</string>
+    <string name="categories">Categories</string>
+    <string name="modern_apart">Modern Apartment</string>
+    <string name="rating">Rating : </string>
+    <string name="menu_view_apart">Details of The Apartment</string>
+    <string name="menu_modify">Modify Post</string>
+    <string name="modify">Modify</string>
+    <string name="favoris">Favoris</string>
+    <string name="favorite">Favorite</string>
+    <string name="delete_images">Delete Images</string>
+    <string name="_190000_dh">190000 DH</string>
+    <string name="message">  Message  </string>
+    <string name="Call">Call</string>
+    <string name="whatsapp">Whatsapp</string>
+
+    <bool name="enable_nearby_search">true</bool>
+
+    <!-- 0.002 USD per each (2.00 USD per 1000) -->
+    <bool name="show_confirmation_photo">true</bool>
+
+    <!-- 0.007 USD per each (7.00 USD per 1000) -->
+    <bool name="show_confirmation_map">true</bool>
+
+    <!-- If true, the map will automatically center (pan) to
+         the selected marker -->
+    <bool name="auto_center_on_marker_click">false</bool>
+
+
+    <!--><-->
+
+    <string-array name="region_array">
+        <item>Béni Mellal-Khénifra</item>
+        <item>Casablanca-Settat</item>
+        <item>Drâa‐Tafilalet</item>
+        <item>Ed Dakhla‐Oued ed Dahab</item>
+        <item>Fès-Meknès</item>
+        <item>Guelmim-Oued Noun</item>
+        <item>Laâyoune‐Saguia al Hamra</item>
+        <item>Marrakech-Safi</item>
+        <item>Oriental</item>
+        <item>Rabat-Salé-Kénitra</item>
+        <item>Sous-Massa</item>
+        <item>Tanger-Tétouan- Al Hoceima</item>
+    </string-array>
+    <string-array name="ville_TangerTetouanAlHoceima">
+        <item>Tanger‐Asilah</item>
+        <item>M\'Diq‐Fnidq</item>
+        <item>Chefchaouen</item>
+        <item>Fahs‐Anjra</item>
+        <item>Larache</item>
+        <item>Tétouan</item>
+        <item>Ouezzane</item>
+        <item>Al Hoceima</item>
+    </string-array>
+
+    <string-array name="ville_Oriental">
+        <item>Oujda Angad</item>
+        <item>Berkane</item>
+        <item>Jrada</item>
+        <item>Nador</item>
+        <item>Taourirt</item>
+        <item>Driouch</item>
+        <item>Guercif</item>
+        <item>Figuig</item>
+    </string-array>
+
+    <string-array name="ville_FesMeknes">
+        <item>Meknès</item>
+        <item>Fès</item>
+        <item>Boulemane</item>
+        <item>El Hajeb</item>
+        <item>Ifrane</item>
+        <item>Sefrou</item>
+        <item>Taounate</item>
+        <item>Taza</item>
+        <item>Moulay Yacoub</item>
+    </string-array>
+
+    <string-array name="ville_RabatSaleKenitra">
+        <item>Rabat</item>
+        <item>Salé</item>
+        <item>Skhirate‐Temara</item>
+        <item>Kénitra</item>
+        <item>Khemisset</item>
+        <item>Sidi Kacem</item>
+        <item>Sidi Slimane</item>
+    </string-array>
+
+    <string-array name="ville_BeniMellalKhénifra">
+        <item>Azilal</item>
+        <item>Béni Mellal</item>
+        <item>Khénifra</item>
+        <item>Khouribga</item>
+        <item>Fquih Ben Salah</item>
+    </string-array>
+
+    <string-array name="ville_CasablancaSettat">
+        <item>Casablanca</item>
+        <item>Mohammedia</item>
+        <item>Ben Slimane</item>
+        <item>El Jadida</item>
+        <item>Mediouna</item>
+        <item>Nouacer</item>
+        <item>Settat</item>
+        <item>Berrechid</item>
+        <item>Sidi Bennour</item>
+    </string-array>
+
+
+    <string-array name="ville_MarrakechSafi">
+        <item>Marrakech</item>
+        <item>Al Haouz</item>
+        <item>Chichaoua</item>
+        <item>El Kelaa Sraghna</item>
+        <item>Essaouira</item>
+        <item>Safi</item>
+        <item>Rehamna</item>
+        <item>Youssoufia</item>
+    </string-array>
+
+
+    <string-array name="ville_DraaTafilalet">
+        <item>Errachidia</item>
+        <item>Ouarzazate</item>
+        <item>Zagora</item>
+        <item>Tinghir</item>
+        <item>Midelt</item>
+    </string-array>
+
+    <string-array name="ville_SousMassa">
+        <item>Agadir Ida Ou Tanane</item>
+        <item>Inezgane Ait Melloul</item>
+        <item>Chtouka Ait Baha</item>
+        <item>Taroudant</item>
+        <item>Tata</item>
+        <item>Tiznit</item>
+    </string-array>
+
+    <string-array name="ville_GuelmimOuedNoun">
+        <item>Guelmim</item>
+        <item>Tan‐Tan</item>
+        <item>Sidi Ifni</item>
+        <item>Assa‐Zag</item>
+    </string-array>
+
+    <string-array name="ville_LaayouneSaguiaalHamra">
+        <item>Es Semara</item>
+        <item>Boujdour</item>
+        <item>Laâyoune</item>
+        <item>Tarfaya</item>
+    </string-array>
+
+    <string-array name="ville_EdDakhlaOuededDahab">
+        <item>Aousserd</item>
+        <item>Oued Eddahab</item>
+    </string-array>
+
+</resources>

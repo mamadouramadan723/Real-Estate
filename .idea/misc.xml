@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/divider.xml" value="0.10885416666666667" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_button_bg.xml" value="0.21614583333333334" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_button_price.xml" value="0.21614583333333334" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_button_price_on_image.xml" value="0.21614583333333334" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_check.xml" value="0.20052083333333334" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_contact_me.xml" value="0.1925925925925926" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_launcher_background.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_location.xml" value="0.21614583333333334" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_menu_camera.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_menu_explore.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_menu_profile.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_post_property.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_search.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_surface.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/rbtn_selector.xml" value="0.21614583333333334" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/rbtn_textcolor_selector.xml" value="0.21614583333333334" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/side_nav_bar.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/activity_filter.xml" value="0.2" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/activity_login_or_register.xml" value="0.1" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/activity_main.xml" value="0.10925925925925926" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/divider.xml" value="0.1" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/filter_apartment.xml" value="0.2" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_apartment_view.xml" value="0.25" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_apartment_view_modify.xml" value="0.1734375" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_explore.xml" value="0.1" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_explorer.xml" value="0.1" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_filter.xml" value="0.22" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_home.xml" value="0.22" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_post.xml" value="0.25" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_profile_update.xml" value="0.1" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_saved.xml" value="0.21" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_update_profile.xml" value="0.190625" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/place_and_photo_test_activity.xml" value="0.18" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/raw_apartment.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/raw_apartment_banner_price_score.xml" value="0.25" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/raw_image_slide_for_apart.xml" value="0.1546875" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/raw_image_slider.xml" value="0.12093023255813953" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/raw_property_type.xml" value="0.432258064516129" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/row_apartment.xml" value="0.25" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/row_loaded_images.xml" value="0.2" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/row_property_type.xml" value="0.2" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
