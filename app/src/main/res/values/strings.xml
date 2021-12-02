@@ -76,7 +76,7 @@
     <string name="categories">Categories</string>
     <string name="modern_apart">Modern Apartment</string>
     <string name="rating">Rating : </string>
-    <string name="menu_view_apart">Details of The Apartment</string>
+    <string name="menu_view_apart">Apartment Details</string>
     <string name="menu_modify">Modify Post</string>
     <string name="modify">Modify</string>
     <string name="favoris">Favoris</string>
@@ -86,6 +86,7 @@
     <string name="message">  Message  </string>
     <string name="Call">Call</string>
     <string name="whatsapp">Whatsapp</string>
+    <string name="_18000_dh_month">18000 DH/Month</string>
 
     <bool name="enable_nearby_search">true</bool>
 

@@ -7,11 +7,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,11 +19,13 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.rmd.realstate.R
 import com.rmd.realstate.activity.Activity_Login_or_Register
 import com.rmd.realstate.databinding.FragmentApartmentViewBinding
 import com.rmd.realstate.databinding.RawApartmentBannerPriceScoreBinding
 import com.rmd.realstate.model.Property
+import com.rmd.realstate.model.User
 import com.rmd.realstate.ui.home.recycler_adapter.Recycler_Adapter_Slide_View_Pager
 import com.rmd.realstate.view_model.SharedViewModel_Property
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.net.URLEncoder
 
 
 class Fragment_Property_View : Fragment() {
@@ -45,7 +47,7 @@ class Fragment_Property_View : Fragment() {
     private lateinit var view_pager_adapterSlideViewPager: Recycler_Adapter_Slide_View_Pager
 
     private var property_id: String = ""
-    private var phone_number = ""
+    private var property_owner_phone_number = ""
     private var favorite_clicked: Boolean = false
     private var image_list: ArrayList<String> = arrayListOf()
 
@@ -84,9 +86,8 @@ class Fragment_Property_View : Fragment() {
             update_property_like()
         }
         binding.contactByCallBtn.setOnClickListener {
-
             val dialIntent = Intent(Intent.ACTION_DIAL)
-            dialIntent.data = Uri.parse("tel:" + "0680523387")
+            dialIntent.data = Uri.parse("tel:$property_owner_phone_number")
             startActivity(dialIntent)
         }
         binding.contactByMessageBtn.setOnClickListener {
@@ -95,25 +96,23 @@ class Fragment_Property_View : Fragment() {
             val text = "Bonjour.\n" +
                     "S'il vous plaît, je suis interessé par votre appartment que vous avez publié sur" +
                     " ${resources.getString(R.string.app_name)}"
-            //val url = "https://api.whatsapp.com/send?phone=+212680523387" //+ "&text=" + URLEncoder.encode("Hello","UTF-8")
-            val url = "https://wa.me/send?phone=+212680523387" //+ "&text=" + URLEncoder.encode("Hello","UTF-8")
+            val url =
+                "https://api.whatsapp.com/send?phone=+212$property_owner_phone_number&text=" + URLEncoder.encode(
+                    text, "UTF-8"
+                )
+            //val url = "https://wa.me/send?phone=+212680523387" //+ "&text=" + URLEncoder.encode("Hello","UTF-8")
             intent.setPackage("com.whatsapp")
             intent.data = Uri.parse(url)
-            if(intent.resolveActivity(packageManager) == null){
-                Toast.makeText(context, "Make Sure you've installed Whatsapp", Toast.LENGTH_SHORT).show()
+            if (intent.resolveActivity(packageManager) == null) {
+                Toast.makeText(context, "Make Sure you've installed Whatsapp", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
             startActivity(intent)
-
         }
 
-
-        binding.modifyApartBtn.setOnClickListener {
-            //set the id of the clicked post
-            my_property_viewModel.set_property_id(property_id)
-
-            NavHostFragment.findNavController(this)
-                .navigate(R.id.action_navigation_view_apart_to_navigation_post_modify)
+        binding_raw.moreBtn.setOnClickListener {
+            show_more_options()
         }
 
         //shared viewModels
@@ -124,6 +123,31 @@ class Fragment_Property_View : Fragment() {
         //functions
         get_apart_info()
         set_apart_like_btn()
+    }
+
+    private fun show_more_options() {
+        val popupMenu = PopupMenu(requireContext(), binding_raw.moreBtn, Gravity.END)
+
+        popupMenu.menu.add(Menu.NONE, 0, 0, "Modify")
+        popupMenu.menu.add(Menu.NONE, 1, 0, "Delete")
+        //popupMenu.menu.add(Menu.NONE, 2, 0, "")
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                0 -> {
+                    //set the id of the clicked post
+                    my_property_viewModel.set_property_id(property_id)
+
+                    NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_navigation_view_apart_to_navigation_post_modify)
+                }
+                1 -> {
+                    Toast.makeText(context, "Not Implemented yet", Toast.LENGTH_SHORT).show()
+                }
+            }
+            false
+        }
+
+        popupMenu.show()
     }
 
     private fun checkUserConnection() {
@@ -222,15 +246,17 @@ class Fragment_Property_View : Fragment() {
                     binding_raw.thisApartmentPriceTv.text =
                         apartment.property_price.toString() + " DH/Month"
 
+
                     image_list = apartment.image_url
                     view_pager_adapterSlideViewPager = Recycler_Adapter_Slide_View_Pager(image_list)
                     my_view_pager.adapter = view_pager_adapterSlideViewPager
 
                     //
                     if (apartment.property_user_id == user?.uid) {
-                        binding.modifyApartBtn.isVisible = true
+                        binding_raw.moreBtn.isVisible = true
                         //binding.layoutContact.isVisible = false
                     }
+                    get_owner_phone_number(apartment.property_user_id)
                 }
             }
         } catch (e: Exception) {
@@ -240,6 +266,17 @@ class Fragment_Property_View : Fragment() {
             }
         }
     }
+
+    private fun get_owner_phone_number(propertyUserId: String) =
+        CoroutineScope(Dispatchers.IO).launch {
+            val profile_ref = FirebaseFirestore.getInstance().collection("profile")
+            val myDocumentSnapshot = profile_ref.document(propertyUserId).get().await()
+            val property_owner = myDocumentSnapshot.toObject<User>()
+
+            property_owner?.let {
+                property_owner_phone_number = property_owner.phonenumber
+            }
+        }
 
     private var onImageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {

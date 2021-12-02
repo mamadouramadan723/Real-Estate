@@ -197,7 +197,7 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
                 return@setOnClickListener
             }
             if (image_list.size < 1 || image_name_list.size < 1) {
-                Toast.makeText(context, "You have to add at least 1 image", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "You have to add at least 2 image", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
             }
@@ -288,6 +288,12 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
                 withContext(Dispatchers.Main) {
                     progressDialog.dismiss()
                     Toast.makeText(requireContext(), "Post added successfully", Toast.LENGTH_LONG)
+                        .show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Make Sure You've Added Your Phone Number To Be Reachable ",
+                        Toast.LENGTH_LONG
+                    )
                         .show()
                     NavHostFragment.findNavController(this@Fragment_Post)
                         .navigate(R.id.action_navigation_post_to_navigation_home)

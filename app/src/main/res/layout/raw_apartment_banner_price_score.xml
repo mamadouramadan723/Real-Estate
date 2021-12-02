@@ -66,7 +66,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
             android:textSize="11sp"
-            android:text="18000 DH/Month"/>
+            android:text="@string/_18000_dh_month"/>
+
+        <ImageButton
+            android:id="@+id/more_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:visibility="gone"
+            android:background="@color/fui_transparent"
+            android:src="@drawable/ic_more" />
 
     </LinearLayout>
 
