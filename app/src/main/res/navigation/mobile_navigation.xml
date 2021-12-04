@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_navigation_view_apart_to_navigation_post_modify"
             app:destination="@id/navigation_post_modify" />
+        <action
+            android:id="@+id/action_navigation_view_apart_to_navigation_home"
+            app:destination="@id/navigation_home" />
     </fragment>
     <fragment
         android:id="@+id/navigation_post_modify"

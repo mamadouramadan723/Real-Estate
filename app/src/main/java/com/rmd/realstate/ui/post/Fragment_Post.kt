@@ -206,6 +206,9 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
 
             property_id = System.currentTimeMillis().toString() + "__" + property_user_id
 
+            progressDialog.setMessage("uploading...")
+            progressDialog.show()
+
             uploadImages()
         }
     }
@@ -215,10 +218,6 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
         image_url.clear()
         try {
 
-            withContext(Dispatchers.Main) {
-                progressDialog.setMessage("uploading...")
-                progressDialog.show()
-            }
 
             for (i in 0..(image_list.size - 1)) {
                 val imageuri: Uri? = image_list[i]

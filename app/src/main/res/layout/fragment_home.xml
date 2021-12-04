@@ -247,7 +247,9 @@
                 android:id="@+id/homes_list_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"/>
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingEnd="100dp"/>
         </LinearLayout>
 
         <!-->Property_Office<-->
@@ -284,7 +286,9 @@
                 android:id="@+id/offices_list_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"/>
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingEnd="100dp"/>
         </LinearLayout>
 
         <!-->Property_Commerce<-->
@@ -321,7 +325,9 @@
                 android:id="@+id/commerces_list_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"/>
+                android:clipToPadding="false"
+                android:paddingStart="10dp"
+                android:paddingEnd="100dp"/>
         </LinearLayout>
 
     </LinearLayout>

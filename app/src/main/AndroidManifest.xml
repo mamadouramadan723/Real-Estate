@@ -33,6 +33,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RealState">
         <activity
+            android:name=".activity.Activity_Settings"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+        <activity
             android:name=".activity.Activity_Login_or_Register"
             android:exported="true" />
         <!--

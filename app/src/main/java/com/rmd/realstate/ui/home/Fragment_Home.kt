@@ -29,11 +29,19 @@ class Fragment_Home : Fragment() {
 
     private lateinit var filtered_property: Filter
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var layout_manager: LinearLayoutManager
+    private lateinit var layout_manager_apartment: LinearLayoutManager
+    private lateinit var layout_manager_home: LinearLayoutManager
+    private lateinit var layout_manager_office: LinearLayoutManager
+    private lateinit var layout_manager_commerce: LinearLayoutManager
     private lateinit var filter_shared_viewModel: SharedViewModel_Filter
 
     private var property_type: String = ""
     private var property_list = ArrayList<Property>()
+    private var apartment_list = ArrayList<Property>()
+    private var home_list = ArrayList<Property>()
+    private var office_list = ArrayList<Property>()
+    private var commercial_list = ArrayList<Property>()
+
 
     private val property_ref = FirebaseFirestore.getInstance()
         .collection("property")
@@ -54,9 +62,20 @@ class Fragment_Home : Fragment() {
             ViewModelProvider(requireActivity())[SharedViewModel_Filter::class.java]
 
         //LayoutManager for recyclerview
-        layout_manager = LinearLayoutManager(context)
-        layout_manager.orientation = LinearLayoutManager.HORIZONTAL
-        binding.apartmentsListRecyclerview.layoutManager = layout_manager
+        layout_manager_apartment = LinearLayoutManager(context)
+        layout_manager_home = LinearLayoutManager(context)
+        layout_manager_office = LinearLayoutManager(context)
+        layout_manager_commerce = LinearLayoutManager(context)
+
+        layout_manager_apartment.orientation = LinearLayoutManager.HORIZONTAL
+        layout_manager_home.orientation = LinearLayoutManager.HORIZONTAL
+        layout_manager_commerce.orientation = LinearLayoutManager.HORIZONTAL
+        layout_manager_office.orientation = LinearLayoutManager.HORIZONTAL
+
+        binding.apartmentsListRecyclerview.layoutManager = layout_manager_apartment
+        binding.homesListRecyclerview.layoutManager = layout_manager_home
+        binding.commercesListRecyclerview.layoutManager = layout_manager_commerce
+        binding.officesListRecyclerview.layoutManager = layout_manager_office
 
         //select which property type to show/hide
         //setOnCheckedChangeListener
@@ -111,6 +130,10 @@ class Fragment_Home : Fragment() {
     private fun get_all_posts() = CoroutineScope(Dispatchers.IO).launch {
 
         property_list.clear()
+        apartment_list.clear()
+        home_list.clear()
+        office_list.clear()
+        commercial_list.clear()
 
         try {
 
@@ -119,19 +142,57 @@ class Fragment_Home : Fragment() {
             myQuerySnapshot.documents.mapNotNull { documentSnapshot ->
 
                 val apartment = documentSnapshot.toObject(Property::class.java)
-                property_list.add(apartment!!)
+                apartment?.let {
+                    property_list.add(apartment)
+
+                    when (apartment.property_type) {
+                        "apartment" -> {
+                            apartment_list.add(apartment)
+                        }
+                        "home" -> {
+                            home_list.add(apartment)
+                        }
+                        "office" -> {
+                            office_list.add(apartment)
+                        }
+                        "commercial" -> {
+                            commercial_list.add(apartment)
+                        }
+                        else -> {}
+                    }
+                }
 
                 //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main) {
-
-                    val adapter_property_list = Recycler_Adapter_Property(
+                    val adapter_apartment_list = Recycler_Adapter_Property(
                         this@Fragment_Home,
                         requireActivity(),
                         R.id.action_navigation_home_to_navigation_view_apart,
-                        property_list.reversed()
+                        apartment_list.reversed()
+                    )
+                    val adapter_home_list = Recycler_Adapter_Property(
+                        this@Fragment_Home,
+                        requireActivity(),
+                        R.id.action_navigation_home_to_navigation_view_apart,
+                        home_list.reversed()
+                    )
+                    val adapter_office_list = Recycler_Adapter_Property(
+                        this@Fragment_Home,
+                        requireActivity(),
+                        R.id.action_navigation_home_to_navigation_view_apart,
+                        office_list.reversed()
+                    )
+                    val adapter_commercial_list = Recycler_Adapter_Property(
+                        this@Fragment_Home,
+                        requireActivity(),
+                        R.id.action_navigation_home_to_navigation_view_apart,
+                        commercial_list.reversed()
                     )
 
-                    binding.apartmentsListRecyclerview.adapter = adapter_property_list
+                    binding.apartmentsListRecyclerview.adapter = adapter_apartment_list
+                    binding.homesListRecyclerview.adapter = adapter_home_list
+                    binding.officesListRecyclerview.adapter = adapter_office_list
+                    binding.commercesListRecyclerview.adapter = adapter_commercial_list
                 }
             }
         } catch (e: Exception) {

@@ -1,6 +1,7 @@
 package com.rmd.realstate.ui.home.detail_view
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -10,6 +11,7 @@ import android.text.Html
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -49,7 +51,9 @@ class Fragment_Property_View : Fragment() {
     private var property_id: String = ""
     private var property_owner_phone_number = ""
     private var favorite_clicked: Boolean = false
+    private lateinit var progressDialog: ProgressDialog
     private var image_list: ArrayList<String> = arrayListOf()
+
 
     private val property_ref = FirebaseFirestore.getInstance()
         .collection("property")
@@ -69,6 +73,7 @@ class Fragment_Property_View : Fragment() {
         checkUserConnection()
 
         binding = FragmentApartmentViewBinding.bind(view)
+        progressDialog = ProgressDialog(requireContext())
         binding_raw = RawApartmentBannerPriceScoreBinding.bind(view)
         my_property_viewModel =
             ViewModelProvider(requireActivity())[SharedViewModel_Property::class.java]
@@ -141,13 +146,44 @@ class Fragment_Property_View : Fragment() {
                         .navigate(R.id.action_navigation_view_apart_to_navigation_post_modify)
                 }
                 1 -> {
-                    Toast.makeText(context, "Not Implemented yet", Toast.LENGTH_SHORT).show()
+                    //popup for confirmation
+                    val alertDialog = AlertDialog.Builder(requireContext())
+                    alertDialog.setTitle("Delete Your Publication")
+                    alertDialog.setMessage("Are you sure ?")
+                        .setIcon(R.drawable.ic_warning)
+                    alertDialog.setPositiveButton("Yes") { _, _ ->
+                        progressDialog.setMessage("Deleting...")
+                        progressDialog.show()
+                        delete_this_publication()
+                    }
+                    alertDialog.setNeutralButton("Cancel") { _, _ ->
+                    }
+                    alertDialog.create().show()
                 }
             }
             false
         }
-
         popupMenu.show()
+    }
+
+    private fun delete_this_publication() = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            property_ref.document(property_id).delete().await()
+            favorite_clicked_ref.document(property_id).delete().await()
+
+            withContext(Dispatchers.Main) {
+                NavHostFragment.findNavController(this@Fragment_Property_View)
+                    .navigate(R.id.action_navigation_view_apart_to_navigation_home)
+                progressDialog.dismiss()
+                Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
+            withContext(Dispatchers.Main) {
+                progressDialog.dismiss()
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun checkUserConnection() {
@@ -248,7 +284,8 @@ class Fragment_Property_View : Fragment() {
 
 
                     image_list = apartment.image_url
-                    view_pager_adapterSlideViewPager = Recycler_Adapter_Slide_View_Pager(image_list)
+                    view_pager_adapterSlideViewPager =
+                        Recycler_Adapter_Slide_View_Pager(image_list)
                     my_view_pager.adapter = view_pager_adapterSlideViewPager
 
                     //
@@ -315,5 +352,3 @@ class Fragment_Property_View : Fragment() {
         super.onDestroy()
     }
 }
-
-
