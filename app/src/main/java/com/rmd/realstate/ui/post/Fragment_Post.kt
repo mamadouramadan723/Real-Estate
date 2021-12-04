@@ -54,7 +54,6 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
     private var property_type: String = "apartment"
     private var property_region: String = ""
     private var property_city: String = ""
-    private var property_commune: String = ""
     private var property_description: String = ""
     private var property_id: String = ""
     private var property_user_id: String = ""
@@ -86,7 +85,6 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
         //spinners list of regions and cities
         binding.spinnerRegion.onItemSelectedListener = this
         binding.spinnerCity.onItemSelectedListener = this
-        //binding.spinnerCommune.onItemSelectedListener = this
 
         //setOnCheckedChangeListener
         binding.propertyTypeRg.setOnCheckedChangeListener { _, checkedId ->
@@ -96,13 +94,7 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
                 }// Toast.makeText(context, "appa", Toast.LENGTH_SHORT).show()
                 R.id.home_rb -> {
                     property_type = "home"
-                }// Toast.makeText(context, "home", Toast.LENGTH_SHORT).show()
-                R.id.office_rb -> {
-                    property_type = "office"
-                }// Toast.makeText(context, "off.", Toast.LENGTH_SHORT).show()
-                R.id.commerce_rb -> {
-                    property_type = "commerce"
-                }// Toast.makeText(context, "comm.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
         binding.bedroomRg.setOnCheckedChangeListener { _, checkedId ->
@@ -253,7 +245,6 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
                     check_tv,
                     property_region,
                     property_city,
-                    property_commune,
                     property_description,
                     property_id,
                     property_user_id,
@@ -447,7 +438,6 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
             R.id.spinner_city -> {
                 property_city = parent.getItemAtPosition(position).toString()
             }
-            //R.id.spinner_commune ->{ Toast.makeText(requireContext(), "commune", Toast.LENGTH_LONG).show()}
         }
     }
 
@@ -460,7 +450,6 @@ class Fragment_Post : Fragment(), AdapterView.OnItemSelectedListener {
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

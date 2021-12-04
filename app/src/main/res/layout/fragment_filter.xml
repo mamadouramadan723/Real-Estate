@@ -38,6 +38,11 @@
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:orientation="horizontal">
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
                     <RadioButton
                         android:id="@+id/apartment_rb"
                         android:layout_width="wrap_content"
@@ -69,32 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"/>
-                    <RadioButton
-                        android:id="@+id/office_rb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/rbtn_selector"
-                        android:textColor="@drawable/rbtn_textcolor_selector"
-                        android:text="@string/office"/>
-                    <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-                    <RadioButton
-                        android:id="@+id/commerce_rb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/rbtn_selector"
-                        android:textColor="@drawable/rbtn_textcolor_selector"
-                        android:text="@string/commerce"/>
+
                 </RadioGroup>
             </LinearLayout>
 

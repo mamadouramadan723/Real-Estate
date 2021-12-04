@@ -31,16 +31,13 @@ class Fragment_Home : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var layout_manager_apartment: LinearLayoutManager
     private lateinit var layout_manager_home: LinearLayoutManager
-    private lateinit var layout_manager_office: LinearLayoutManager
-    private lateinit var layout_manager_commerce: LinearLayoutManager
     private lateinit var filter_shared_viewModel: SharedViewModel_Filter
-
     private var property_type: String = ""
+    private var horizontal_apartment_view = false
+    private var horizontal_home_view = false
     private var property_list = ArrayList<Property>()
     private var apartment_list = ArrayList<Property>()
     private var home_list = ArrayList<Property>()
-    private var office_list = ArrayList<Property>()
-    private var commercial_list = ArrayList<Property>()
 
 
     private val property_ref = FirebaseFirestore.getInstance()
@@ -64,18 +61,12 @@ class Fragment_Home : Fragment() {
         //LayoutManager for recyclerview
         layout_manager_apartment = LinearLayoutManager(context)
         layout_manager_home = LinearLayoutManager(context)
-        layout_manager_office = LinearLayoutManager(context)
-        layout_manager_commerce = LinearLayoutManager(context)
 
         layout_manager_apartment.orientation = LinearLayoutManager.HORIZONTAL
         layout_manager_home.orientation = LinearLayoutManager.HORIZONTAL
-        layout_manager_commerce.orientation = LinearLayoutManager.HORIZONTAL
-        layout_manager_office.orientation = LinearLayoutManager.HORIZONTAL
 
         binding.apartmentsListRecyclerview.layoutManager = layout_manager_apartment
         binding.homesListRecyclerview.layoutManager = layout_manager_home
-        binding.commercesListRecyclerview.layoutManager = layout_manager_commerce
-        binding.officesListRecyclerview.layoutManager = layout_manager_office
 
         //select which property type to show/hide
         //setOnCheckedChangeListener
@@ -85,29 +76,11 @@ class Fragment_Home : Fragment() {
                     property_type = "apartment"
                     binding.apartmentLayout.visibility = View.VISIBLE
                     binding.homeLayout.visibility = View.GONE
-                    binding.officeLayout.visibility = View.GONE
-                    binding.commerceLayout.visibility = View.GONE
                 }
                 R.id.home_rb -> {
                     property_type = "home"
                     binding.apartmentLayout.visibility = View.GONE
                     binding.homeLayout.visibility = View.VISIBLE
-                    binding.officeLayout.visibility = View.GONE
-                    binding.commerceLayout.visibility = View.GONE
-                }
-                R.id.office_rb -> {
-                    property_type = "office"
-                    binding.apartmentLayout.visibility = View.GONE
-                    binding.homeLayout.visibility = View.GONE
-                    binding.officeLayout.visibility = View.VISIBLE
-                    binding.commerceLayout.visibility = View.GONE
-                }
-                R.id.commerce_rb -> {
-                    property_type = "commerce"
-                    binding.apartmentLayout.visibility = View.GONE
-                    binding.homeLayout.visibility = View.GONE
-                    binding.officeLayout.visibility = View.GONE
-                    binding.commerceLayout.visibility = View.VISIBLE
                 }
             }
         }
@@ -116,6 +89,30 @@ class Fragment_Home : Fragment() {
         binding.filterImgbtn.setOnClickListener {
             NavHostFragment.findNavController(this)
                 .navigate(R.id.action_navigation_home_to_navigation_filter)
+        }
+        binding.seeMoreApartmentsBtn.setOnClickListener {
+            if (horizontal_apartment_view.equals(true)) {
+                layout_manager_apartment.orientation = LinearLayoutManager.HORIZONTAL
+                binding.apartmentsListRecyclerview.layoutManager = layout_manager_apartment
+                horizontal_apartment_view = false
+            } else {
+                layout_manager_apartment.orientation = LinearLayoutManager.VERTICAL
+                binding.apartmentsListRecyclerview.layoutManager = layout_manager_apartment
+                horizontal_apartment_view = true
+            }
+        }
+        binding.seeMoreHomesBtn.setOnClickListener {
+            if (horizontal_home_view.equals(true)) {
+                binding.seeMoreApartmentsBtn.setText("See Less")
+                layout_manager_home.orientation = LinearLayoutManager.HORIZONTAL
+                binding.homesListRecyclerview.layoutManager = layout_manager_home
+                horizontal_home_view = false
+            } else {
+                binding.seeMoreApartmentsBtn.setText("See More")
+                layout_manager_home.orientation = LinearLayoutManager.VERTICAL
+                binding.homesListRecyclerview.layoutManager = layout_manager_home
+                horizontal_home_view = false
+            }
         }
 
         //shared viewModels
@@ -132,8 +129,6 @@ class Fragment_Home : Fragment() {
         property_list.clear()
         apartment_list.clear()
         home_list.clear()
-        office_list.clear()
-        commercial_list.clear()
 
         try {
 
@@ -151,12 +146,6 @@ class Fragment_Home : Fragment() {
                         }
                         "home" -> {
                             home_list.add(apartment)
-                        }
-                        "office" -> {
-                            office_list.add(apartment)
-                        }
-                        "commercial" -> {
-                            commercial_list.add(apartment)
                         }
                         else -> {}
                     }
@@ -176,23 +165,10 @@ class Fragment_Home : Fragment() {
                         R.id.action_navigation_home_to_navigation_view_apart,
                         home_list.reversed()
                     )
-                    val adapter_office_list = Recycler_Adapter_Property(
-                        this@Fragment_Home,
-                        requireActivity(),
-                        R.id.action_navigation_home_to_navigation_view_apart,
-                        office_list.reversed()
-                    )
-                    val adapter_commercial_list = Recycler_Adapter_Property(
-                        this@Fragment_Home,
-                        requireActivity(),
-                        R.id.action_navigation_home_to_navigation_view_apart,
-                        commercial_list.reversed()
-                    )
+
 
                     binding.apartmentsListRecyclerview.adapter = adapter_apartment_list
                     binding.homesListRecyclerview.adapter = adapter_home_list
-                    binding.officesListRecyclerview.adapter = adapter_office_list
-                    binding.commercesListRecyclerview.adapter = adapter_commercial_list
                 }
             }
         } catch (e: Exception) {

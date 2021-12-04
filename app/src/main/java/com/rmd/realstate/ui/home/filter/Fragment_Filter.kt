@@ -86,12 +86,6 @@ class Fragment_Filter : Fragment(), AdapterView.OnItemSelectedListener {
                 R.id.home_rb -> {
                     property_type = "home"
                 }
-                R.id.office_rb -> {
-                    property_type = "office"
-                }
-                R.id.commerce_rb -> {
-                    property_type = "commerce"
-                }
             }
         }
         binding.bedroomRg.setOnCheckedChangeListener { _, checkedId ->

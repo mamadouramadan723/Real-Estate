@@ -58,7 +58,6 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
     private var property_type = "apartment"
     private var property_region = ""
     private var property_city = ""
-    private var property_commune = ""
     private var property_description = ""
     private var property_id = ""
     private var check_balcony = false
@@ -96,7 +95,6 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
         //spinners list of regions and cities
         binding.spinnerRegion.onItemSelectedListener = this
         binding.spinnerCity.onItemSelectedListener = this
-        //binding.spinnerCommune.onItemSelectedListener = this
 
         //setOnCheckedChangeListener
         binding.propertyTypeRg.setOnCheckedChangeListener { _, checkedId ->
@@ -106,12 +104,6 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
                 }
                 R.id.home_rb -> {
                     property_type = "home"
-                }
-                R.id.office_rb -> {
-                    property_type = "office"
-                }
-                R.id.commerce_rb -> {
-                    property_type = "commerce"
                 }
             }
         }
@@ -266,7 +258,6 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
                     property_type = apartment.property_type
                     property_region = apartment.property_region
                     property_city = apartment.property_city
-                    property_commune = apartment.property_commune
                     property_description = apartment.property_description
                     property_id = apartment.property_id
                     check_balcony = apartment.has_balcony
@@ -286,8 +277,6 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
                     when (property_type) {
                         "apartment" -> checked_property_type_id = R.id.apartment_rb
                         "home" -> checked_property_type_id = R.id.home_rb
-                        "office" -> checked_property_type_id = R.id.office_rb
-                        "commerce" -> checked_property_type_id = R.id.commerce_rb
                     }
                     binding.propertyTypeRg.check(checked_property_type_id)
 
@@ -369,7 +358,6 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
                     update["check_tv"] = check_tv
                     update["property_region"] = property_region
                     update["property_city"] = property_city
-                    update["property_commune"] = property_commune
                     update["property_description"] = property_description
                     update["image_url"] = image_url
                     apply_and_update(update)
@@ -398,7 +386,6 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
                     update["check_tv"] = check_tv
                     update["property_region"] = property_region
                     update["property_city"] = property_city
-                    update["property_commune"] = property_commune
                     update["property_description"] = property_description
                     apply_and_update(update)
                 }
@@ -596,9 +583,6 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
             }
             R.id.spinner_city -> {
                 property_city = parent.getItemAtPosition(position).toString()
-            }
-            R.id.spinner_commune -> {
-                Toast.makeText(requireContext(), "commune", Toast.LENGTH_LONG).show()
             }
         }
     }

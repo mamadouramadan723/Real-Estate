@@ -14,7 +14,6 @@ data class Property(
     var has_tv_room: Boolean = false,
     var property_region: String = "",
     var property_city: String = "",
-    var property_commune: String = "",
     var property_description: String = "",
     var property_id: String = "",
     var property_user_id: String = "",

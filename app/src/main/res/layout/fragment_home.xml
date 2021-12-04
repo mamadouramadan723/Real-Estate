@@ -8,83 +8,89 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:paddingBottom="300dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="300dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:orientation="horizontal"
             android:paddingTop="15dp"
-            android:paddingBottom="25dp"
-            android:orientation="horizontal">
+            android:paddingBottom="25dp">
+
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_place"
-                tools:ignore="Suspicious0dp"
                 android:backgroundTint="@color/fui_transparent"
-                android:contentDescription="@string/todo" />
+                android:contentDescription="@string/todo"
+                android:src="@drawable/ic_place"
+                tools:ignore="Suspicious0dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="15sp"
-                android:textStyle="bold"
                 android:paddingBottom="5dp"
+                android:text="@string/your_localization_here"
                 android:textColor="@color/black"
-                android:text="@string/your_localization_here"/>
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
+
             <ImageButton
                 android:id="@+id/notification_imgbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_notification"
-                tools:ignore="Suspicious0dp"
                 android:backgroundTint="@color/fui_transparent"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/ic_notification"
 
-                android:contentDescription="@string/todo" />
+                tools:ignore="Suspicious0dp" />
 
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="50sp"
             android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="@color/black"
             android:paddingBottom="25dp"
-            android:text="@string/find_your_rental_home_here"/>
+            android:text="@string/find_your_rental_home_here"
+            android:textColor="@color/black"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:paddingBottom="50dp">
+
             <SearchView
                 android:id="@+id/search_svw"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.9"
                 android:closeIcon="@drawable/ic_close"
-                android:searchIcon="@drawable/ic_search"
-                android:queryHint="Search me"
                 android:focusableInTouchMode="true"
                 android:iconifiedByDefault="false"
+                android:queryHint="Search me"
+                android:searchIcon="@drawable/ic_search"
                 tools:ignore="Suspicious0dp" />
+
             <ImageButton
                 android:id="@+id/filter_imgbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_filter"
-                tools:ignore="Suspicious0dp"
                 android:backgroundTint="@color/fui_transparent"
-                android:contentDescription="@string/todo" />
+                android:contentDescription="@string/todo"
+                android:src="@drawable/ic_filter"
+                tools:ignore="Suspicious0dp" />
         </LinearLayout>
 
         <!-->Categories<-->
@@ -92,84 +98,69 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:textSize="15sp"
-                android:textStyle="bold"
                 android:paddingBottom="15dp"
+                android:text="@string/categories"
                 android:textColor="@color/black"
-                android:text="@string/categories"/>
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="25dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="25dp">
+
                 <RadioGroup
                     android:id="@+id/property_type_rg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
                     <RadioButton
                         android:id="@+id/apartment_rb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rbtn_selector"
                         android:button="@null"
                         android:checked="true"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/rbtn_selector"
-                        android:textColor="@drawable/rbtn_textcolor_selector"
-                        android:text="@string/apartment"/>
+                        android:text="@string/apartment"
+                        android:textColor="@drawable/rbtn_textcolor_selector" />
+
                     <Space
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
+
                     <RadioButton
                         android:id="@+id/home_rb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rbtn_selector"
                         android:button="@null"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/rbtn_selector"
-                        android:textColor="@drawable/rbtn_textcolor_selector"
-                        android:text="@string/menu_home"/>
+                        android:text="@string/menu_home"
+                        android:textColor="@drawable/rbtn_textcolor_selector" />
+
                     <Space
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-                    <RadioButton
-                        android:id="@+id/office_rb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/rbtn_selector"
-                        android:textColor="@drawable/rbtn_textcolor_selector"
-                        android:text="@string/office"/>
-                    <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-                    <RadioButton
-                        android:id="@+id/commerce_rb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/rbtn_selector"
-                        android:textColor="@drawable/rbtn_textcolor_selector"
-                        android:text="@string/commerce"/>
+                        android:layout_weight="1" />
                 </RadioGroup>
 
             </LinearLayout>
@@ -181,153 +172,92 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="@string/apartments"
+                    android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/see_more_apartments_tv"
+                    android:textStyle="bold" />
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/see_more_apartments_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:gravity="center|end"
                     android:text="@string/see_more"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:gravity="end"
-                    android:textColor="@color/purple_500"/>
+                    android:background="@color/fui_transparent"
+                    android:textColor="@color/purple_500"
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/apartments_list_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
-                android:paddingEnd="100dp"/>
+                android:paddingEnd="100dp" />
         </LinearLayout>
 
         <!-->Homes<-->
         <LinearLayout
             android:id="@+id/home_layout"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="@string/homes"
+                    android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/see_more_homes_tv"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/see_more_homes_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:gravity="center|end"
                     android:text="@string/see_more"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:gravity="end"
-                    android:textColor="@color/purple_500"/>
+                    android:background="@color/fui_transparent"
+                    android:textColor="@color/purple_500"
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/homes_list_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:paddingStart="10dp"
-                android:paddingEnd="100dp"/>
-        </LinearLayout>
-
-        <!-->Property_Office<-->
-        <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/office_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="@string/offices"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/see_more_offices_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="@string/see_more"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:gravity="end"
-                    android:textColor="@color/purple_500"/>
-            </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/offices_list_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingStart="10dp"
-                android:paddingEnd="100dp"/>
-        </LinearLayout>
-
-        <!-->Property_Commerce<-->
-        <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/commerce_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="@string/commerces"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/see_more_commerces_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="@string/see_more"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:gravity="end"
-                    android:textColor="@color/purple_500"/>
-            </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/commerces_list_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingStart="10dp"
-                android:paddingEnd="100dp"/>
+                android:paddingEnd="100dp" />
         </LinearLayout>
 
     </LinearLayout>
