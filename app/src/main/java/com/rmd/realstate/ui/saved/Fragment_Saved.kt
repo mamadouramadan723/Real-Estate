@@ -104,7 +104,7 @@ class Fragment_Saved : Fragment() {
                                     this@Fragment_Saved,
                                     requireActivity(),
                                     R.id.action_navigation_saved_to_navigation_view_apart,
-                                    property_list.reversed()
+                                    property_list
                                 )
                                 binding.likedApartmentsListRecyclerview.adapter = adapter_apartment
                             }
@@ -116,6 +116,7 @@ class Fragment_Saved : Fragment() {
 
             //As we can't directly access to UI within a coroutine, we use withContext
             withContext(Dispatchers.Main) {
+                //Log.d
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
         }

@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,12 +34,15 @@ class Fragment_Home : Fragment() {
     private lateinit var layout_manager_apartment: LinearLayoutManager
     private lateinit var layout_manager_home: LinearLayoutManager
     private lateinit var filter_shared_viewModel: SharedViewModel_Filter
+    private lateinit var adapter_apartment_list: Recycler_Adapter_Property
+    private lateinit var adapter_home_list: Recycler_Adapter_Property
     private var property_type: String = ""
     private var horizontal_apartment_view = false
     private var horizontal_home_view = false
     private var property_list = ArrayList<Property>()
     private var apartment_list = ArrayList<Property>()
     private var home_list = ArrayList<Property>()
+    private var list_city = ArrayList<String>()
 
 
     private val property_ref = FirebaseFirestore.getInstance()
@@ -57,6 +62,20 @@ class Fragment_Home : Fragment() {
         binding = FragmentHomeBinding.bind(view)
         filter_shared_viewModel =
             ViewModelProvider(requireActivity())[SharedViewModel_Filter::class.java]
+        adapter_home_list = Recycler_Adapter_Property(
+            this@Fragment_Home,
+            requireActivity(),
+            R.id.action_navigation_home_to_navigation_view_apart,
+            home_list
+        )
+        adapter_apartment_list = Recycler_Adapter_Property(
+            this@Fragment_Home,
+            requireActivity(),
+            R.id.action_navigation_home_to_navigation_view_apart,
+            home_list
+        )
+
+
 
         //LayoutManager for recyclerview
         layout_manager_apartment = LinearLayoutManager(context)
@@ -115,6 +134,20 @@ class Fragment_Home : Fragment() {
             }
         }
 
+
+
+        binding.searchSvw.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+
+                adapter_apartment_list.filter.filter(newText)
+                adapter_home_list.filter.filter(newText)
+                return false
+            }
+        })
         //shared viewModels
         filter_shared_viewModel.my_filter.observe(viewLifecycleOwner, Observer {
             filtered_property = it
@@ -153,17 +186,17 @@ class Fragment_Home : Fragment() {
 
                 //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main) {
-                    val adapter_apartment_list = Recycler_Adapter_Property(
+                    adapter_apartment_list = Recycler_Adapter_Property(
                         this@Fragment_Home,
                         requireActivity(),
                         R.id.action_navigation_home_to_navigation_view_apart,
-                        apartment_list.reversed()
+                        apartment_list
                     )
-                    val adapter_home_list = Recycler_Adapter_Property(
+                    adapter_home_list = Recycler_Adapter_Property(
                         this@Fragment_Home,
                         requireActivity(),
                         R.id.action_navigation_home_to_navigation_view_apart,
-                        home_list.reversed()
+                        home_list
                     )
 
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
@@ -67,18 +68,23 @@ class Fragment_Profile : Fragment() {
         try {
             user?.let {
                 val myDocumentSnapshot = profile_ref.document(user.uid).get().await()
+                val myUser = myDocumentSnapshot.toObject<User>()
 
-                val stringBuiler = StringBuilder()
-                val myuser = myDocumentSnapshot.toObject<User>()
-                stringBuiler.append("$myuser")
+                /*val stringBuilder = StringBuilder()
+                stringBuilder.append("$myUser")
+                Log.d("+++--", "$stringBuilder")*/
 
                 //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main) {
-                    myuser?.let {
-                        binding.usernameTv.text = myuser.username
-                        binding.mailTv.text = myuser.mail
-                        binding.phoneNumberTv.text = myuser.phonenumber
-                        Picasso.get().load(myuser.image_url).into(binding.profileImgv)
+                    myUser?.let {
+                        binding.mailTv.text = myUser.mail
+                        binding.usernameTv.text = myUser.username
+                        binding.phoneNumberTv.text = myUser.phonenumber
+                        Picasso.get().load(myUser.image_url).into(binding.profileImgv)
+
+                        if(myUser.mail == "null") binding.mailTv.isVisible = false
+                        if(myUser.username == "null") binding.usernameTv.isVisible = false
+                        if(myUser.phonenumber == "null") binding.phoneNumberTv.isVisible = false
                     }
                 }
             }

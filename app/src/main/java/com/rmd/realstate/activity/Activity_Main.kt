@@ -2,6 +2,7 @@ package com.rmd.realstate.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.rmd.realstate.R
@@ -55,6 +57,23 @@ class Activity_Main : AppCompatActivity() {
             } else {
                 navView.visibility = View.VISIBLE
             }
+        }
+
+        //to Handle email link verified to be authenticated
+        if (AuthUI.canHandleIntent(intent)) {
+            val link = intent.data.toString()
+            val providers: List<AuthUI.IdpConfig> = listOf(
+                AuthUI.IdpConfig.EmailBuilder().build()
+            )
+            Log.d("++++++link = ", link)
+            startActivityForResult(
+                AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setEmailLink(link)
+                    .setAvailableProviders(providers)
+                    .build(),
+                Activity_Login_or_Register.AUTH_REQUEST_CODE
+            )
         }
     }
 

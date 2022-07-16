@@ -83,25 +83,29 @@ class Fragment_Profile_Update : Fragment() {
         try {
             user?.let {
                 val myDocumentSnapshot = profile_ref.document(user.uid).get().await()
+                val myUser = myDocumentSnapshot.toObject<User>()
+                /*val stringBuilder = StringBuilder()
+                stringBuilder.append("$myUser")
+                Log.d("+++--", "$stringBuilder")*/
 
-                val stringBuiler = StringBuilder()
-                val myuser = myDocumentSnapshot.toObject<User>()
-                stringBuiler.append("$myuser")
-
+                //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main){
-                    myuser?.let {
-                        image_url = myuser.image_url
-                        //Log.d("+++imageuri = ", "uri="+image_url.toUri()+"___url="+image_url)
-                        binding.usernameEdt.setText(myuser.username)
-                        binding.mailEdt.setText(myuser.mail)
-                        binding.phoneNumberEdt.setText(myuser.phonenumber)
-                        Picasso.get().load(myuser.image_url).into(binding.profileUpdateImg)
+                    myUser?.let {
+                        binding.mailEdt.setText(myUser.mail)
+                        binding.usernameEdt.setText(myUser.username)
+                        binding.phoneNumberEdt.setText(myUser.phonenumber)
+                        Picasso.get().load(myUser.image_url).into(binding.profileUpdateImg)
+
+                        if(myUser.mail == "null") binding.mailEdt.setText("")
+                        if(myUser.username == "null") binding.usernameEdt.setText("")
+                        if(myUser.phonenumber == "null") binding.phoneNumberEdt.setText("")
+
                     }
                 }
             }
         }
         catch (e: Exception){
-            //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
+            //As we can't directly access to UI within a coroutine, we use withContext
             withContext(Dispatchers.Main){
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
@@ -152,31 +156,34 @@ class Fragment_Profile_Update : Fragment() {
 
         //get new user infos
 
-        val myusername = binding.usernameEdt.text.toString()
-        val mymail = binding.mailEdt.text.toString()
-        val myphonenumber = binding.phoneNumberEdt.text.toString()
+        val myUsername = binding.usernameEdt.text.toString()
+        val myMail = binding.mailEdt.text.toString()
+        val myPhoneNumber = binding.phoneNumberEdt.text.toString()
 
         //then map
         val map = mutableMapOf<String, Any>()
 
-        if(myusername.isNotEmpty())
-            map["username"] = myusername
+        if(myUsername.isNotEmpty())
+            map["username"] = myUsername
         else{
-            Toast.makeText(context, "Username most not be empty", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Username must not be empty", Toast.LENGTH_LONG).show()
+            progressDialog.dismiss()
             return
         }
 
-        if(mymail.isNotEmpty())
-            map["mail"] = mymail
+        if(myMail.isNotEmpty())
+            map["mail"] = myMail
         else{
-            Toast.makeText(context, "mail most not be empty", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "mail must not be empty", Toast.LENGTH_LONG).show()
+            progressDialog.dismiss()
             return
         }
 
-        if(myphonenumber.isNotEmpty())
-            map["phonenumber"] = myphonenumber
+        if(myPhoneNumber.isNotEmpty())
+            map["phonenumber"] = myPhoneNumber
         else{
-            Toast.makeText(context, "phone number most not be empty", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "phone number must not be empty", Toast.LENGTH_LONG).show()
+            progressDialog.dismiss()
             return
         }
 
@@ -195,8 +202,9 @@ class Fragment_Profile_Update : Fragment() {
                     .set(newUserMap, SetOptions.merge())
                     .await()
 
+                //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main){
-                    Toast.makeText(context, "Profile Updated successfuly", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Profile Updated successfully", Toast.LENGTH_LONG).show()
                     progressDialog.dismiss()
                     NavHostFragment.findNavController(this@Fragment_Profile_Update)
                         .navigate(R.id.action_navigation_update_profile_to_navigation_profile)
@@ -204,7 +212,7 @@ class Fragment_Profile_Update : Fragment() {
             }
         }
         catch (e: Exception){
-            //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
+            //As we can't directly access to UI within a coroutine, we use withContext
             withContext(Dispatchers.Main){
                 progressDialog.dismiss()
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()

@@ -71,7 +71,7 @@
             android:orientation="horizontal"
             android:paddingBottom="50dp">
 
-            <SearchView
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_svw"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

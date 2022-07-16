@@ -70,7 +70,7 @@ class Fragment_Explorer : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClic
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
 
-                lastLocation = p0.lastLocation
+                lastLocation = p0.lastLocation!!
                 placeMarkerOnMap(LatLng(lastLocation.latitude, lastLocation.longitude))
             }
         }
