@@ -82,9 +82,9 @@ class Fragment_Profile : Fragment() {
                         binding.phoneNumberTv.text = myUser.phonenumber
                         Picasso.get().load(myUser.image_url).into(binding.profileImgv)
 
-                        if(myUser.mail == "null") binding.mailTv.isVisible = false
-                        if(myUser.username == "null") binding.usernameTv.isVisible = false
-                        if(myUser.phonenumber == "null") binding.phoneNumberTv.isVisible = false
+                        if (myUser.mail == "null") binding.mailTv.isVisible = false
+                        if (myUser.username == "null") binding.usernameTv.isVisible = false
+                        if (myUser.phonenumber == "null") binding.phoneNumberTv.isVisible = false
                     }
                 }
             }
