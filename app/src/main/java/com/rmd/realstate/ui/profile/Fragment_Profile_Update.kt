@@ -41,8 +41,10 @@ class Fragment_Profile_Update : Fragment() {
     private var image_uri: Uri? = null
     private var image_url: String = ""
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         auth = FirebaseAuth.getInstance()
         return inflater.inflate(R.layout.fragment_profile_update, container, false)
     }
@@ -58,6 +60,12 @@ class Fragment_Profile_Update : Fragment() {
         binding.profileUpdateImg.setOnClickListener {
             handleImageClick()
         }
+        binding.validateUpdatePhoneBtn.setOnClickListener {
+            updatePhoneNumber()
+        }
+        binding.validateUpdateMailBtn.setOnClickListener {
+            updateMail()
+        }
         binding.validateUpdateProfileBtn.setOnClickListener {
             progressDialog.setMessage("updating...")
             progressDialog.show()
@@ -65,20 +73,26 @@ class Fragment_Profile_Update : Fragment() {
         }
     }
 
+    private fun updateMail() {
+        Toast.makeText(context, "Not Implemented Yet \uD83D\uDE0A", Toast.LENGTH_LONG).show()
+    }
+
+    private fun updatePhoneNumber() {
+        Toast.makeText(context, "Not Implemented Yet \uD83D\uDE0A", Toast.LENGTH_LONG).show()
+    }
 
     private fun checkUserConnection() {
         val user = auth.currentUser
-        if(user == null){
+        if (user == null) {
             val intent = Intent(context, Activity_Login_or_Register::class.java)
             startActivity(intent)
             activity?.finish()
-        }
-        else{
+        } else {
             getUserInfos_and_fillChamp()
         }
     }
 
-    private fun getUserInfos_and_fillChamp() = CoroutineScope(Dispatchers.IO).launch{
+    private fun getUserInfos_and_fillChamp() = CoroutineScope(Dispatchers.IO).launch {
         val user = auth.currentUser
         try {
             user?.let {
@@ -89,28 +103,28 @@ class Fragment_Profile_Update : Fragment() {
                 Log.d("+++--", "$stringBuilder")*/
 
                 //As we can't directly access to UI within a coroutine, we use withContext
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     myUser?.let {
                         binding.mailEdt.setText(myUser.mail)
                         binding.usernameEdt.setText(myUser.username)
                         binding.phoneNumberEdt.setText(myUser.phonenumber)
                         Picasso.get().load(myUser.image_url).into(binding.profileUpdateImg)
 
-                        if(myUser.mail == "null") binding.mailEdt.setText("")
-                        if(myUser.username == "null") binding.usernameEdt.setText("")
-                        if(myUser.phonenumber == "null") binding.phoneNumberEdt.setText("")
+                        if (myUser.mail == "null") binding.mailEdt.setText("")
+                        if (myUser.username == "null") binding.usernameEdt.setText("")
+                        if (myUser.phonenumber == "null") binding.phoneNumberEdt.setText("")
 
                     }
                 }
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             //As we can't directly access to UI within a coroutine, we use withContext
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
         }
     }
+
     private fun updateUserInfos() {
         uploadImage()
     }
@@ -119,9 +133,10 @@ class Fragment_Profile_Update : Fragment() {
 
         val user = auth.currentUser
         try {
-            if(image_uri != null){
-                val storageReference = FirebaseStorage.getInstance().getReference("Profile Image/"+user?.uid+"/profile for "+user?.uid)
-                val uploadTask =  storageReference.putFile(image_uri!!)
+            if (image_uri != null) {
+                val storageReference = FirebaseStorage.getInstance()
+                    .getReference("Profile Image/" + user?.uid + "/profile for " + user?.uid)
+                val uploadTask = storageReference.putFile(image_uri!!)
 
                 uploadTask.continueWithTask { task ->
                     if (!task.isSuccessful) {
@@ -137,17 +152,19 @@ class Fragment_Profile_Update : Fragment() {
                         getNewUserInfos_mapThem_then_Update()
 
                     } else {
-                        Toast.makeText(context, "fail to retrieve uri from firestorage", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            context,
+                            "fail to retrieve uri from firestorage",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
-            }
-            else{
+            } else {
 
                 getNewUserInfos_mapThem_then_Update()
             }
 
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
         }
     }
@@ -163,25 +180,25 @@ class Fragment_Profile_Update : Fragment() {
         //then map
         val map = mutableMapOf<String, Any>()
 
-        if(myUsername.isNotEmpty())
+        if (myUsername.isNotEmpty())
             map["username"] = myUsername
-        else{
+        else {
             Toast.makeText(context, "Username must not be empty", Toast.LENGTH_LONG).show()
             progressDialog.dismiss()
             return
         }
 
-        if(myMail.isNotEmpty())
+        if (myMail.isNotEmpty())
             map["mail"] = myMail
-        else{
+        else {
             Toast.makeText(context, "mail must not be empty", Toast.LENGTH_LONG).show()
             progressDialog.dismiss()
             return
         }
 
-        if(myPhoneNumber.isNotEmpty())
+        if (myPhoneNumber.isNotEmpty())
             map["phonenumber"] = myPhoneNumber
-        else{
+        else {
             Toast.makeText(context, "phone number must not be empty", Toast.LENGTH_LONG).show()
             progressDialog.dismiss()
             return
@@ -193,32 +210,34 @@ class Fragment_Profile_Update : Fragment() {
         updateProfile(map)
     }
 
-    private fun updateProfile(newUserMap: Map<String, Any>) = CoroutineScope(Dispatchers.IO).launch {
-        val user = auth.currentUser
+    private fun updateProfile(newUserMap: Map<String, Any>) =
+        CoroutineScope(Dispatchers.IO).launch {
+            val user = auth.currentUser
 
-        try {
-            user?.let {
-                profile_ref.document(user.uid)
-                    .set(newUserMap, SetOptions.merge())
-                    .await()
 
+            try {
+                user?.let {
+                    profile_ref.document(user.uid)
+                        .set(newUserMap, SetOptions.merge())
+                        .await()
+
+                    //As we can't directly access to UI within a coroutine, we use withContext
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Profile Updated successfully", Toast.LENGTH_LONG)
+                            .show()
+                        progressDialog.dismiss()
+                        NavHostFragment.findNavController(this@Fragment_Profile_Update)
+                            .navigate(R.id.action_navigation_update_profile_to_navigation_profile)
+                    }
+                }
+            } catch (e: Exception) {
                 //As we can't directly access to UI within a coroutine, we use withContext
-                withContext(Dispatchers.Main){
-                    Toast.makeText(context, "Profile Updated successfully", Toast.LENGTH_LONG).show()
+                withContext(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    NavHostFragment.findNavController(this@Fragment_Profile_Update)
-                        .navigate(R.id.action_navigation_update_profile_to_navigation_profile)
+                    Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
-        catch (e: Exception){
-            //As we can't directly access to UI within a coroutine, we use withContext
-            withContext(Dispatchers.Main){
-                progressDialog.dismiss()
-                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
 
     private fun handleImageClick() {
         Intent(Intent.ACTION_GET_CONTENT).also { intent ->
@@ -230,11 +249,12 @@ class Fragment_Profile_Update : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK){
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             data?.data?.let { uri ->
                 image_uri = uri
                 Picasso.get().load(image_uri).into(binding.profileUpdateImg)
             }
         }
+
     }
 }

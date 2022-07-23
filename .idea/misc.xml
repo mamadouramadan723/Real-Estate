@@ -18,6 +18,7 @@
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_menu_explore.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_menu_profile.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_modify.xml" value="0.1195" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_post_property.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_search.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/drawable/ic_surface.xml" value="0.13333333333333333" />
@@ -37,7 +38,7 @@
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_home.xml" value="0.22" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_post.xml" value="0.15" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
-        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_profile_update.xml" value="0.1" />
+        <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_profile_update.xml" value="0.25" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_saved.xml" value="0.21" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/fragment_update_profile.xml" value="0.190625" />
         <entry key="..\:/Users/mamad/AndroidStudioProjects/RealState/app/src/main/res/layout/place_and_photo_test_activity.xml" value="0.18" />
