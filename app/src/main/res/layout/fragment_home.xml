@@ -1,264 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/swipeLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="vertical"
-        android:paddingBottom="300dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingTop="15dp"
-            android:paddingBottom="25dp">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/fui_transparent"
-                android:contentDescription="@string/todo"
-                android:src="@drawable/ic_place"
-                tools:ignore="Suspicious0dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingBottom="5dp"
-                android:text="@string/your_localization_here"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/notification_imgbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/fui_transparent"
-                android:contentDescription="@string/todo"
-                android:src="@drawable/ic_notification"
-
-                tools:ignore="Suspicious0dp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingBottom="25dp"
-            android:text="@string/find_your_rental_home_here"
-            android:textColor="@color/black"
-            android:textSize="50sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingBottom="50dp">
-
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_svw"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.9"
-                android:closeIcon="@drawable/ic_close"
-                android:focusableInTouchMode="true"
-                android:iconifiedByDefault="false"
-                android:queryHint="Search me"
-                android:searchIcon="@drawable/ic_search"
-                tools:ignore="Suspicious0dp" />
-
-            <ImageButton
-                android:id="@+id/filter_imgbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/fui_transparent"
-                android:contentDescription="@string/todo"
-                android:src="@drawable/ic_filter"
-                tools:ignore="Suspicious0dp" />
-        </LinearLayout>
-
-        <!-->Categories<-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:paddingBottom="15dp"
-                android:text="@string/categories"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:paddingBottom="300dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
+                android:paddingTop="15dp"
                 android:paddingBottom="25dp">
 
-                <RadioGroup
-                    android:id="@+id/property_type_rg"
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/fui_transparent"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_place"
+                    tools:ignore="Suspicious0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingBottom="5dp"
+                    android:text="@string/your_localization_here"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/notification_imgbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/fui_transparent"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_notification"
+
+                    tools:ignore="Suspicious0dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="25dp"
+                android:text="@string/find_your_rental_home_here"
+                android:textColor="@color/black"
+                android:textSize="50sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="50dp">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_svw"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9"
+                    android:closeIcon="@drawable/ic_close"
+                    android:focusableInTouchMode="true"
+                    android:iconifiedByDefault="false"
+                    android:queryHint="Search me"
+                    android:searchIcon="@drawable/ic_search"
+                    tools:ignore="Suspicious0dp" />
+
+                <ImageButton
+                    android:id="@+id/filter_imgbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/fui_transparent"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_filter"
+                    tools:ignore="Suspicious0dp" />
+            </LinearLayout>
+
+            <!-->Categories<-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingBottom="15dp"
+                    android:text="@string/categories"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
+                    android:orientation="horizontal"
+                    android:paddingBottom="25dp">
+
+                    <RadioGroup
+                        android:id="@+id/property_type_rg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <RadioButton
+                            android:id="@+id/apartment_rb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/rbtn_selector"
+                            android:button="@null"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="@string/apartment"
+                            android:textColor="@drawable/rbtn_textcolor_selector" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <RadioButton
+                            android:id="@+id/home_rb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/rbtn_selector"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="@string/menu_home"
+                            android:textColor="@drawable/rbtn_textcolor_selector" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+                    </RadioGroup>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-->Apartments<-->
+            <LinearLayout
+                android:id="@+id/apartment_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Space
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <RadioButton
-                        android:id="@+id/apartment_rb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/rbtn_selector"
-                        android:button="@null"
-                        android:checked="true"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="@string/apartment"
-                        android:textColor="@drawable/rbtn_textcolor_selector" />
+                        android:layout_weight="0.5"
+                        android:text="@string/apartments"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <Space
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
-                    <RadioButton
-                        android:id="@+id/home_rb"
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/see_more_apartments_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/rbtn_selector"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="@string/menu_home"
-                        android:textColor="@drawable/rbtn_textcolor_selector" />
+                        android:layout_weight="0.5"
+                        android:background="@color/fui_transparent"
+                        android:gravity="center|end"
+                        android:text="@string/see_more"
+                        android:textColor="@color/purple_500"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-                    <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </RadioGroup>
-
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/apartments_list_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="100dp" />
             </LinearLayout>
-        </LinearLayout>
 
-        <!-->Apartments<-->
-        <LinearLayout
-            android:id="@+id/apartment_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            <!-->Homes<-->
             <LinearLayout
+                android:id="@+id/home_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="@string/apartments"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/see_more_apartments_btn"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="@string/homes"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/see_more_homes_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:background="@color/fui_transparent"
+                        android:gravity="center|end"
+                        android:text="@string/see_more"
+                        android:textColor="@color/purple_500"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/homes_list_recyclerview"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="center|end"
-                    android:text="@string/see_more"
-                    android:background="@color/fui_transparent"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold" />
+                    android:clipToPadding="false"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="100dp" />
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/apartments_list_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingStart="10dp"
-                android:paddingEnd="100dp" />
         </LinearLayout>
+    </ScrollView>
 
-        <!-->Homes<-->
-        <LinearLayout
-            android:id="@+id/home_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="@string/homes"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/see_more_homes_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="center|end"
-                    android:text="@string/see_more"
-                    android:background="@color/fui_transparent"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/homes_list_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingStart="10dp"
-                android:paddingEnd="100dp" />
-        </LinearLayout>
-
-    </LinearLayout>
-</ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

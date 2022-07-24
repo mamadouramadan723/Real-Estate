@@ -1,5 +1,6 @@
 package com.rmd.realstate.ui.home
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -74,7 +75,17 @@ class Fragment_Home : Fragment() {
             R.id.action_navigation_home_to_navigation_view_apart,
             home_list
         )
-
+        binding.swipeLayout.setOnRefreshListener {
+            Toast.makeText(context, "Refreshing", Toast.LENGTH_SHORT).show()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                getParentFragmentManager().beginTransaction().detach(this).commitNow()
+                getParentFragmentManager().beginTransaction().attach(this).commitNow()
+                binding.swipeLayout.isRefreshing = false
+            } else {
+                getParentFragmentManager().beginTransaction().detach(this).attach(this).commit()
+                binding.swipeLayout.isRefreshing = false
+            }
+        }
 
 
         //LayoutManager for recyclerview
