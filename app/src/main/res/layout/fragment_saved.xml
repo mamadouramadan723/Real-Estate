@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,17 +9,6 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:paddingBottom="15dp"
-            android:paddingTop="25dp"
-            android:textColor="@color/black"
-            android:text="@string/favorite"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/liked_apartments_list_recyclerview"

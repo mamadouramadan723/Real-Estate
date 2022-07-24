@@ -3,6 +3,7 @@ package com.rmd.realstate.ui.home.detail_view
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -14,11 +15,15 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.google.android.libraries.places.api.model.Place
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -27,8 +32,10 @@ import com.rmd.realstate.activity.Activity_Login_or_Register
 import com.rmd.realstate.databinding.FragmentPostBinding
 import com.rmd.realstate.model.Property
 import com.rmd.realstate.ui.home.recycler_adapter.Recycler_Adapter_Loaded_Image_Url
+import com.rmd.realstate.ui.post.Fragment_Post
 import com.rmd.realstate.ui.post.recycler_adapter.Recycler_Adapter_Loaded_Image_Uri
 import com.rmd.realstate.view_model.SharedViewModel_Property
+import com.rtchagas.pingplacepicker.PingPlacePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +43,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 
-class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedListener {
+class Fragment_Property_View_Update : Fragment() {
 
     private lateinit var my_property_viewModel: SharedViewModel_Property
     private lateinit var applied_published: Property
@@ -56,8 +63,7 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
     private var property_size = 0
     private var property_price = 0
     private var property_type = "apartment"
-    private var property_region = ""
-    private var property_city = ""
+    private lateinit var property_place : Place
     private var property_description = ""
     private var property_id = ""
     private var check_balcony = false
@@ -91,10 +97,6 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
         mLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.imagesAddedListRecyclerview.layoutManager = mLayoutManager
 
-
-        //spinners list of regions and cities
-        binding.spinnerRegion.onItemSelectedListener = this
-        binding.spinnerCity.onItemSelectedListener = this
 
         //setOnCheckedChangeListener
         binding.propertyTypeRg.setOnCheckedChangeListener { _, checkedId ->
@@ -170,6 +172,10 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
         }
         binding.addImagesImgv.setOnClickListener {
             handleImageClick()
+        }
+        binding.chooseLocationBtn.setOnClickListener {
+            setUpMap()
+            showPlacePicker()
         }
 
         binding.deleteLoadedImagesBtn.setOnClickListener {
@@ -256,8 +262,7 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
                     property_size = apartment.property_size
                     property_price = apartment.property_price
                     property_type = apartment.property_type
-                    property_region = apartment.property_region
-                    property_city = apartment.property_city
+                    property_place = apartment.property_place
                     property_description = apartment.property_description
                     property_id = apartment.property_id
                     check_balcony = apartment.has_balcony
@@ -356,8 +361,7 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
                     update["check_balcony"] = check_balcony
                     update["check_baby"] = check_baby
                     update["check_tv"] = check_tv
-                    update["property_region"] = property_region
-                    update["property_city"] = property_city
+                    update["property_place"] = property_place
                     update["property_description"] = property_description
                     update["image_url"] = image_url
                     apply_and_update(update)
@@ -384,8 +388,7 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
                     update["check_balcony"] = check_balcony
                     update["check_baby"] = check_baby
                     update["check_tv"] = check_tv
-                    update["property_region"] = property_region
-                    update["property_city"] = property_city
+                    update["property_place"] = property_place
                     update["property_description"] = property_description
                     apply_and_update(update)
                 }
@@ -453,139 +456,49 @@ class Fragment_Property_View_Update : Fragment(), AdapterView.OnItemSelectedList
                     .show()
             }
         }
-    }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        var spinner: Spinner = parent as Spinner
-        when (parent.id) {
-
-            R.id.spinner_region -> {
-                property_region = parent.getItemAtPosition(position).toString()
-                when (position) {
-                    0 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_BeniMellalKhénifra)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    1 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_CasablancaSettat)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    2 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_DraaTafilalet)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    3 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_EdDakhlaOuededDahab)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    4 -> {
-                        val list_default_city = resources.getStringArray(R.array.ville_FesMeknes)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    5 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_GuelmimOuedNoun)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    6 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_LaayouneSaguiaalHamra)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    7 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_MarrakechSafi)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    8 -> {
-                        val list_default_city = resources.getStringArray(R.array.ville_Oriental)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    9 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_RabatSaleKenitra)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    10 -> {
-                        val list_default_city = resources.getStringArray(R.array.ville_SousMassa)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    11 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_TangerTetouanAlHoceima)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                }
-            }
-            R.id.spinner_city -> {
-                property_city = parent.getItemAtPosition(position).toString()
-            }
+        if ((requestCode == PLACE_PICKER_REQUEST) && (resultCode == Activity.RESULT_OK)) {
+            val place: Place? = PingPlacePicker.getPlace(data!!)
+            property_place = place!!
+            binding.locationSelectedTv.text = "You selected: ${place?.name}"
+            Log.d("++++++ : ", "address : ${place?.address}, latlng : ${place?.latLng}, photo : ${place?.name}")
+            //Toast.makeText(context, "You selected: ${place?.name}", Toast.LENGTH_LONG).show()
         }
     }
 
-    override fun onNothingSelected(p0: AdapterView<*>?) {}
+    private fun setUpMap() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+            return
+        }
+    }
+
+    private fun showPlacePicker() {
+        val builder = PingPlacePicker.IntentBuilder()
+        builder
+            .setAndroidApiKey(getString(R.string.PLACES_API_KEY))
+            .setMapsApiKey(getString(R.string.PLACES_API_KEY))
+
+        try {
+            val placeIntent = builder.build(requireActivity())
+            startActivityForResult(placeIntent, PLACE_PICKER_REQUEST)
+        } catch (e: GooglePlayServicesRepairableException) {
+            e.printStackTrace()
+        } catch (e: GooglePlayServicesNotAvailableException) {
+            e.printStackTrace()
+        }
+    }
+
+    companion object {
+        private const val PLACE_PICKER_REQUEST = 1
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 2
+    }
 }

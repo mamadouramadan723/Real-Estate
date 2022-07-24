@@ -17,11 +17,7 @@
             android:id="@+id/action_navigation_home_to_navigation_view_apart"
             app:destination="@id/navigation_view_apart" />
     </fragment>
-    <fragment
-        android:id="@+id/navigation_explorer"
-        android:name="com.rmd.realstate.ui.explore.Fragment_Explorer"
-        android:label="@string/menu_explore"
-        tools:layout="@layout/fragment_explorer" />
+
     <fragment
         android:id="@+id/navigation_view_apart"
         android:name="com.rmd.realstate.ui.home.detail_view.Fragment_Property_View"

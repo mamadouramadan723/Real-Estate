@@ -49,7 +49,7 @@ class Recycler_Adapter_Property(
 
         holder.itemView.apply {
 
-            binding.apartmentLocationTv.text = property_list[position].property_city
+            binding.apartmentLocationTv.text = property_list[position].property_place.address
             binding.apartmentSurface.text = property_list[position].property_size.toString()
             binding.apartmentBedNumber.text = property_list[position].number_bedrooms.toString()
             binding.apartmentPriceTv.text =
@@ -92,7 +92,7 @@ class Recycler_Adapter_Property(
                 temp_list.addAll(all_properties)
             } else {
                 for (item in all_properties) {
-                    if (item.property_city.lowercase(Locale.getDefault()).contains(search_text)
+                    if (item.property_place.address.lowercase(Locale.getDefault()).contains(search_text)
                         || item.property_description.lowercase(Locale.getDefault())
                             .contains(search_text)
                     ) {

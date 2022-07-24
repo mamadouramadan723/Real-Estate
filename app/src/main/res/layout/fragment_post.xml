@@ -86,12 +86,12 @@
                 </RadioGroup>
             </LinearLayout>
 
-            <!-->Region, Ville, Commune<-->
+            <!-->Location<-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="15dp">
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -106,74 +106,41 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:paddingBottom="5dp"
-                        android:text="@string/region"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <Spinner
-                        android:id="@+id/spinner_region"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:entries="@array/region_array"
-                        android:textAlignment="center" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:paddingBottom="5dp"
-                        android:text="@string/city"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <Spinner
-                        android:id="@+id/spinner_city"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:entries="@array/ville_BeniMellalKhénifra"
-                        android:textAlignment="center" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:paddingTop="12dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.2"
-                        android:paddingBottom="5dp"
-                        android:text="@string/commune"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <Spinner
-                        android:id="@+id/spinner_commune"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.8"
-                        android:entries="@array/ville_BeniMellalKhénifra"
-                        android:textAlignment="center" />
+                        android:orientation="vertical"
+                        android:paddingTop="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="5dp"
+                            android:text="@string/pick_your_location_on_maps"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/locationSelectedTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp"
+                            android:textColor="@color/quantum_black_text"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/chooseLocationBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/teal_200"
+                        android:src="@drawable/ic_maps" />
 
                 </LinearLayout>
             </LinearLayout>

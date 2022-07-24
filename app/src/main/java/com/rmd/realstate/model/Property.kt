@@ -1,5 +1,7 @@
 package com.rmd.realstate.model
 
+import com.google.android.libraries.places.api.model.Place
+
 data class Property(
     var property_type: String = "",
     var property_size: Int = 0,
@@ -12,8 +14,7 @@ data class Property(
     var has_balcony: Boolean = false,
     var has_bedroom_baby: Boolean = false,
     var has_tv_room: Boolean = false,
-    var property_region: String = "",
-    var property_city: String = "",
+    var property_place: Place,
     var property_description: String = "",
     var property_id: String = "",
     var property_user_id: String = "",
