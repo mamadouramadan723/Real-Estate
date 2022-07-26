@@ -32,20 +32,19 @@ class Fragment_Profile_Update : Fragment() {
 
 
     //variable declaration
-    private lateinit var binding: FragmentProfileUpdateBinding
-    private lateinit var auth: FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var progressDialog: ProgressDialog
+    private lateinit var binding: FragmentProfileUpdateBinding
 
+    private var imageUri: Uri? = null
+    private var imageUrl: String = ""
     private val profile_ref = FirebaseFirestore.getInstance().collection("profile")
-    private val PICK_IMAGE_REQUEST = 1234
-    private var image_uri: Uri? = null
-    private var image_url: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        auth = FirebaseAuth.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
         return inflater.inflate(R.layout.fragment_profile_update, container, false)
     }
 
@@ -82,7 +81,7 @@ class Fragment_Profile_Update : Fragment() {
     }
 
     private fun checkUserConnection() {
-        val user = auth.currentUser
+        val user = firebaseAuth.currentUser
         if (user == null) {
             val intent = Intent(context, Activity_Login_or_Register::class.java)
             startActivity(intent)
@@ -93,7 +92,7 @@ class Fragment_Profile_Update : Fragment() {
     }
 
     private fun getUserInfos_and_fillChamp() = CoroutineScope(Dispatchers.IO).launch {
-        val user = auth.currentUser
+        val user = firebaseAuth.currentUser
         try {
             user?.let {
                 val myDocumentSnapshot = profile_ref.document(user.uid).get().await()
@@ -105,15 +104,14 @@ class Fragment_Profile_Update : Fragment() {
                 //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main) {
                     myUser?.let {
-                        binding.mailEdt.setText(myUser.mail)
-                        binding.usernameEdt.setText(myUser.username)
-                        binding.phoneNumberEdt.setText(myUser.phonenumber)
-                        Picasso.get().load(myUser.image_url).into(binding.profileUpdateImg)
+                        binding.mailEdt.setText(myUser.userMail)
+                        binding.usernameEdt.setText(myUser.userName)
+                        binding.phoneNumberEdt.setText(myUser.userPhoneNumber)
+                        Picasso.get().load(myUser.userImageUrl).into(binding.profileUpdateImg)
 
-                        if (myUser.mail == "null") binding.mailEdt.setText("")
-                        if (myUser.username == "null") binding.usernameEdt.setText("")
-                        if (myUser.phonenumber == "null") binding.phoneNumberEdt.setText("")
-
+                        if (myUser.userMail == "null") binding.mailEdt.setText("")
+                        if (myUser.userName == "null") binding.usernameEdt.setText("")
+                        if (myUser.userPhoneNumber == "null") binding.phoneNumberEdt.setText("")
                     }
                 }
             }
@@ -131,12 +129,12 @@ class Fragment_Profile_Update : Fragment() {
 
     private fun uploadImage() {
 
-        val user = auth.currentUser
+        val user = firebaseAuth.currentUser
         try {
-            if (image_uri != null) {
+            if (imageUri != null) {
                 val storageReference = FirebaseStorage.getInstance()
                     .getReference("Profile Image/" + user?.uid + "/profile for " + user?.uid)
-                val uploadTask = storageReference.putFile(image_uri!!)
+                val uploadTask = storageReference.putFile(imageUri!!)
 
                 uploadTask.continueWithTask { task ->
                     if (!task.isSuccessful) {
@@ -148,7 +146,7 @@ class Fragment_Profile_Update : Fragment() {
                 }.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
 
-                        image_url = task.result.toString()
+                        imageUrl = task.result.toString()
                         getNewUserInfos_mapThem_then_Update()
 
                     } else {
@@ -173,15 +171,15 @@ class Fragment_Profile_Update : Fragment() {
 
         //get new user infos
 
-        val myUsername = binding.usernameEdt.text.toString()
         val myMail = binding.mailEdt.text.toString()
+        val myUsername = binding.usernameEdt.text.toString()
         val myPhoneNumber = binding.phoneNumberEdt.text.toString()
 
         //then map
         val map = mutableMapOf<String, Any>()
 
         if (myUsername.isNotEmpty())
-            map["username"] = myUsername
+            map["userName"] = myUsername
         else {
             Toast.makeText(context, "Username must not be empty", Toast.LENGTH_LONG).show()
             progressDialog.dismiss()
@@ -189,7 +187,7 @@ class Fragment_Profile_Update : Fragment() {
         }
 
         if (myMail.isNotEmpty())
-            map["mail"] = myMail
+            map["userMail"] = myMail
         else {
             Toast.makeText(context, "mail must not be empty", Toast.LENGTH_LONG).show()
             progressDialog.dismiss()
@@ -197,14 +195,14 @@ class Fragment_Profile_Update : Fragment() {
         }
 
         if (myPhoneNumber.isNotEmpty())
-            map["phonenumber"] = myPhoneNumber
+            map["userPhoneNumber"] = myPhoneNumber
         else {
             Toast.makeText(context, "phone number must not be empty", Toast.LENGTH_LONG).show()
             progressDialog.dismiss()
             return
         }
 
-        map["image_url"] = image_url
+        map["userImageUrl"] = imageUrl
 
         //then update
         updateProfile(map)
@@ -212,7 +210,7 @@ class Fragment_Profile_Update : Fragment() {
 
     private fun updateProfile(newUserMap: Map<String, Any>) =
         CoroutineScope(Dispatchers.IO).launch {
-            val user = auth.currentUser
+            val user = firebaseAuth.currentUser
 
 
             try {
@@ -243,18 +241,22 @@ class Fragment_Profile_Update : Fragment() {
         Intent(Intent.ACTION_GET_CONTENT).also { intent ->
             intent.type = "image/*"
             //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            startActivityForResult(intent, PICK_IMAGE_REQUEST)
+            startActivityForResult(intent, Companion.PICK_IMAGE_REQUEST)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == Companion.PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             data?.data?.let { uri ->
-                image_uri = uri
-                Picasso.get().load(image_uri).into(binding.profileUpdateImg)
+                imageUri = uri
+                Picasso.get().load(imageUri).into(binding.profileUpdateImg)
             }
         }
 
+    }
+
+    companion object {
+        private const val PICK_IMAGE_REQUEST = 1234
     }
 }

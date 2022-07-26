@@ -2,10 +2,10 @@ package com.rmd.realstate.ui.home
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -29,24 +29,21 @@ import kotlinx.coroutines.withContext
 class Fragment_Home : Fragment() {
 
     //declarations
-
-    private lateinit var filtered_property: Filter
+    private lateinit var filteredProperty: Filter
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var layout_manager_apartment: LinearLayoutManager
-    private lateinit var layout_manager_home: LinearLayoutManager
-    private lateinit var filter_shared_viewModel: SharedViewModel_Filter
-    private lateinit var adapter_apartment_list: Recycler_Adapter_Property
-    private lateinit var adapter_home_list: Recycler_Adapter_Property
-    private var property_type: String = ""
-    private var horizontal_apartment_view = false
-    private var horizontal_home_view = false
-    private var property_list = ArrayList<Property>()
-    private var apartment_list = ArrayList<Property>()
-    private var home_list = ArrayList<Property>()
-    private var list_city = ArrayList<String>()
+    private lateinit var layoutManagerHome: LinearLayoutManager
+    private lateinit var layoutManagerApartment: LinearLayoutManager
+    private lateinit var filterSharedViewmodel: SharedViewModel_Filter
+    private lateinit var recyclerAdapterHomeList: Recycler_Adapter_Property
+    private lateinit var recyclerAdapterApartmentList: Recycler_Adapter_Property
 
+    private var propertyType: String = ""
+    private var horizontalHomeView = false
+    private var horizontalApartmentView = false
+    private var homeList = ArrayList<Property>()
+    private var apartmentList = ArrayList<Property>()
 
-    private val property_ref = FirebaseFirestore.getInstance()
+    private val propertyRef = FirebaseFirestore.getInstance()
         .collection("property")
 
     override fun onCreateView(
@@ -61,54 +58,46 @@ class Fragment_Home : Fragment() {
 
         //initializations
         binding = FragmentHomeBinding.bind(view)
-        filter_shared_viewModel =
+        filterSharedViewmodel =
             ViewModelProvider(requireActivity())[SharedViewModel_Filter::class.java]
-        adapter_home_list = Recycler_Adapter_Property(
+        recyclerAdapterHomeList = Recycler_Adapter_Property(
             this@Fragment_Home,
             requireActivity(),
             R.id.action_navigation_home_to_navigation_view_apart,
-            home_list
+            homeList
         )
-        adapter_apartment_list = Recycler_Adapter_Property(
+        recyclerAdapterApartmentList = Recycler_Adapter_Property(
             this@Fragment_Home,
             requireActivity(),
             R.id.action_navigation_home_to_navigation_view_apart,
-            home_list
+            homeList
         )
         binding.swipeLayout.setOnRefreshListener {
             Toast.makeText(context, "Refreshing", Toast.LENGTH_SHORT).show()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                getParentFragmentManager().beginTransaction().detach(this).commitNow()
-                getParentFragmentManager().beginTransaction().attach(this).commitNow()
-                binding.swipeLayout.isRefreshing = false
-            } else {
-                getParentFragmentManager().beginTransaction().detach(this).attach(this).commit()
-                binding.swipeLayout.isRefreshing = false
-            }
+            refresh()
         }
 
-
         //LayoutManager for recyclerview
-        layout_manager_apartment = LinearLayoutManager(context)
-        layout_manager_home = LinearLayoutManager(context)
+        layoutManagerApartment = LinearLayoutManager(context)
+        layoutManagerHome = LinearLayoutManager(context)
 
-        layout_manager_apartment.orientation = LinearLayoutManager.HORIZONTAL
-        layout_manager_home.orientation = LinearLayoutManager.HORIZONTAL
+        layoutManagerApartment.orientation = LinearLayoutManager.HORIZONTAL
+        layoutManagerHome.orientation = LinearLayoutManager.HORIZONTAL
 
-        binding.apartmentsListRecyclerview.layoutManager = layout_manager_apartment
-        binding.homesListRecyclerview.layoutManager = layout_manager_home
+        binding.apartmentsListRecyclerview.layoutManager = layoutManagerApartment
+        binding.homesListRecyclerview.layoutManager = layoutManagerHome
 
         //select which property type to show/hide
         //setOnCheckedChangeListener
         binding.propertyTypeRg.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.apartment_rb -> {
-                    property_type = "apartment"
+                    propertyType = "apartment"
                     binding.apartmentLayout.visibility = View.VISIBLE
                     binding.homeLayout.visibility = View.GONE
                 }
                 R.id.home_rb -> {
-                    property_type = "home"
+                    propertyType = "home"
                     binding.apartmentLayout.visibility = View.GONE
                     binding.homeLayout.visibility = View.VISIBLE
                 }
@@ -121,31 +110,29 @@ class Fragment_Home : Fragment() {
                 .navigate(R.id.action_navigation_home_to_navigation_filter)
         }
         binding.seeMoreApartmentsBtn.setOnClickListener {
-            if (horizontal_apartment_view.equals(true)) {
-                layout_manager_apartment.orientation = LinearLayoutManager.HORIZONTAL
-                binding.apartmentsListRecyclerview.layoutManager = layout_manager_apartment
-                horizontal_apartment_view = false
+            if (horizontalApartmentView.equals(true)) {
+                layoutManagerApartment.orientation = LinearLayoutManager.HORIZONTAL
+                binding.apartmentsListRecyclerview.layoutManager = layoutManagerApartment
+                horizontalApartmentView = false
             } else {
-                layout_manager_apartment.orientation = LinearLayoutManager.VERTICAL
-                binding.apartmentsListRecyclerview.layoutManager = layout_manager_apartment
-                horizontal_apartment_view = true
+                layoutManagerApartment.orientation = LinearLayoutManager.VERTICAL
+                binding.apartmentsListRecyclerview.layoutManager = layoutManagerApartment
+                horizontalApartmentView = true
             }
         }
         binding.seeMoreHomesBtn.setOnClickListener {
-            if (horizontal_home_view.equals(true)) {
+            if (horizontalHomeView.equals(true)) {
                 binding.seeMoreApartmentsBtn.setText("See Less")
-                layout_manager_home.orientation = LinearLayoutManager.HORIZONTAL
-                binding.homesListRecyclerview.layoutManager = layout_manager_home
-                horizontal_home_view = false
+                layoutManagerHome.orientation = LinearLayoutManager.HORIZONTAL
+                binding.homesListRecyclerview.layoutManager = layoutManagerHome
+                horizontalHomeView = false
             } else {
                 binding.seeMoreApartmentsBtn.setText("See More")
-                layout_manager_home.orientation = LinearLayoutManager.VERTICAL
-                binding.homesListRecyclerview.layoutManager = layout_manager_home
-                horizontal_home_view = false
+                layoutManagerHome.orientation = LinearLayoutManager.VERTICAL
+                binding.homesListRecyclerview.layoutManager = layoutManagerHome
+                horizontalHomeView = false
             }
         }
-
-
 
         binding.searchSvw.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -154,42 +141,53 @@ class Fragment_Home : Fragment() {
 
             override fun onQueryTextChange(newText: String): Boolean {
 
-                adapter_apartment_list.filter.filter(newText)
-                adapter_home_list.filter.filter(newText)
+                recyclerAdapterApartmentList.filter.filter(newText)
+                recyclerAdapterHomeList.filter.filter(newText)
                 return false
             }
         })
         //shared viewModels
-        filter_shared_viewModel.my_filter.observe(viewLifecycleOwner, Observer {
-            filtered_property = it
+        filterSharedViewmodel.my_filter.observe(viewLifecycleOwner, Observer {
+            filteredProperty = it
         })
 
         //functions
-        get_all_posts()
+        getAllPosts()
     }
 
-    private fun get_all_posts() = CoroutineScope(Dispatchers.IO).launch {
+    private fun refresh() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            getParentFragmentManager().beginTransaction().detach(this).commitNow()
+            getParentFragmentManager().beginTransaction().attach(this).commitNow()
+            binding.swipeLayout.isRefreshing = false
+        } else {
+            getParentFragmentManager().beginTransaction().detach(this).attach(this).commit()
+            binding.swipeLayout.isRefreshing = false
+        }
+    }
 
-        property_list.clear()
-        apartment_list.clear()
-        home_list.clear()
+    private fun getAllPosts() = CoroutineScope(Dispatchers.IO).launch {
+        apartmentList.clear()
+        homeList.clear()
 
         try {
+            val myQuerySnapshot = propertyRef.get().await()
 
-            val myQuerySnapshot = property_ref.get().await()
+            /*val stringBuilder = StringBuilder()
+            stringBuilder.append("${myQuerySnapshot.documents.toObject(Property::class.java)}")
+            Log.d("+++--", "$stringBuilder")*/
 
             myQuerySnapshot.documents.mapNotNull { documentSnapshot ->
 
                 val apartment = documentSnapshot.toObject(Property::class.java)
-                apartment?.let {
-                    property_list.add(apartment)
 
-                    when (apartment.property_type) {
+                apartment?.let {
+                    when (apartment.propertyType) {
                         "apartment" -> {
-                            apartment_list.add(apartment)
+                            apartmentList.add(apartment)
                         }
                         "home" -> {
-                            home_list.add(apartment)
+                            homeList.add(apartment)
                         }
                         else -> {}
                     }
@@ -197,29 +195,29 @@ class Fragment_Home : Fragment() {
 
                 //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main) {
-                    adapter_apartment_list = Recycler_Adapter_Property(
+
+                    recyclerAdapterApartmentList = Recycler_Adapter_Property(
                         this@Fragment_Home,
                         requireActivity(),
                         R.id.action_navigation_home_to_navigation_view_apart,
-                        apartment_list
+                        apartmentList
                     )
-                    adapter_home_list = Recycler_Adapter_Property(
+                    recyclerAdapterHomeList = Recycler_Adapter_Property(
                         this@Fragment_Home,
                         requireActivity(),
                         R.id.action_navigation_home_to_navigation_view_apart,
-                        home_list
+                        homeList
                     )
 
-
-                    binding.apartmentsListRecyclerview.adapter = adapter_apartment_list
-                    binding.homesListRecyclerview.adapter = adapter_home_list
+                    binding.apartmentsListRecyclerview.adapter = recyclerAdapterApartmentList
+                    binding.homesListRecyclerview.adapter = recyclerAdapterHomeList
                 }
             }
         } catch (e: Exception) {
-
             //As we can't directly access to UI within a coroutine, we use withContext
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                Log.e(" +++++", "" + e.message)
             }
         }
     }

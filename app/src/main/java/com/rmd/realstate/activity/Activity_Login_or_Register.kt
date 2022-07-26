@@ -54,12 +54,12 @@ class Activity_Login_or_Register : AppCompatActivity() {
             .build()
 
         providers = arrayListOf(
-            IdpConfig.EmailBuilder().enableEmailLinkSignIn()
-                .setActionCodeSettings(actionCodeSettings).build(),
             IdpConfig.PhoneBuilder().build(),
             IdpConfig.GoogleBuilder().build(),
+            IdpConfig.GitHubBuilder().build(),
             IdpConfig.FacebookBuilder().build(),
-            IdpConfig.GitHubBuilder().build()
+            IdpConfig.EmailBuilder().enableEmailLinkSignIn()
+                .setActionCodeSettings(actionCodeSettings).build()
         )
         listener = FirebaseAuth.AuthStateListener { auth ->
             val user = auth.currentUser
@@ -86,38 +86,34 @@ class Activity_Login_or_Register : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == Companion.AUTH_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                val response = IdpResponse.fromResultIntent(data)
+        if (requestCode == AUTH_REQUEST_CODE && resultCode == RESULT_OK) {
+            val response = IdpResponse.fromResultIntent(data)
 
-                if (response != null && response.isNewUser) {
-                    val user = firebaseAuth.currentUser
-                    user?.let {
-                        val myUsername = "" + user.displayName
-                        val myMail = "" + user.email
-                        val myUserId = "" + user.uid
-                        val myPhoneNumber = "" + user.phoneNumber
-                        val myImageUrl =
-                            "https://firebasestorage.googleapis.com/v0/b/real-state-723.appspot.com/o/default%2Fworkspace.png?alt=media&token=d2624d4b-8656-403b-9d6e-9bbfebaebb25"
-                        val myImageName = "ProfileImageFor__" + user.uid
+            if (response != null && response.isNewUser) {
+                val user = firebaseAuth.currentUser
+                user?.let {
+                    val myUserId = user.uid
+                    val myUserMail = user.email ?: ""
+                    val myUsername = user.displayName ?: ""
+                    val myPhoneNumber = user.phoneNumber ?: ""
+                    val myUserImageUrl =
+                        "https://firebasestorage.googleapis.com/v0/b/real-state-723.appspot.com/o/default%2Fworkspace.png?alt=media&token=d2624d4b-8656-403b-9d6e-9bbfebaebb25"
 
-                        val myUser = User(
-                            myMail,
-                            myUserId,
-                            myUsername,
-                            myImageUrl,
-                            myImageName,
-                            myPhoneNumber
-                        )
-                        uploadData(myUser)
-                    }
-                } else {
-                    Toast.makeText(this, "Welcome back", Toast.LENGTH_LONG).show()
-                    //As soon as I authenticate, return to main
-                    val intent = Intent(this@Activity_Login_or_Register, Activity_Main::class.java)
-                    startActivity(intent)
-                    finish()
+                    val myUser = User(
+                        myUserId,
+                        myUsername,
+                        myUserMail,
+                        myUserImageUrl,
+                        myPhoneNumber,
+                    )
+                    uploadData(myUser)
                 }
+            } else {
+                Toast.makeText(this, "Welcome back", Toast.LENGTH_LONG).show()
+                //As soon after authentication, return to main
+                val intent = Intent(this@Activity_Login_or_Register, Activity_Main::class.java)
+                startActivity(intent)
+                finish()
             }
         }
     }
@@ -130,7 +126,7 @@ class Activity_Login_or_Register : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 Toast.makeText(
                     this@Activity_Login_or_Register,
-                    "User added with success",
+                    "User added successfully",
                     Toast.LENGTH_LONG
                 ).show()
 
@@ -148,10 +144,6 @@ class Activity_Login_or_Register : AppCompatActivity() {
         }
     }
 
-    companion object {
-        const val AUTH_REQUEST_CODE = 1234
-    }
-
     override fun onStart() {
         super.onStart()
         firebaseAuth.addAuthStateListener(listener)
@@ -160,5 +152,9 @@ class Activity_Login_or_Register : AppCompatActivity() {
     override fun onStop() {
         firebaseAuth.removeAuthStateListener(listener)
         super.onStop()
+    }
+
+    companion object {
+        private const val AUTH_REQUEST_CODE = 1
     }
 }

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,39 +37,45 @@ import kotlinx.coroutines.withContext
 class Fragment_Post : Fragment() {
 
     //variable declaration
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var propertyToPublish: Property
     private lateinit var binding: FragmentPostBinding
-    private lateinit var applied_published: Property
-    private lateinit var auth: FirebaseAuth
     private lateinit var progressDialog: ProgressDialog
+
+    private var imageList = ArrayList<Uri?>()
+    private var imageNameList = ArrayList<String>()
+    private var propertyId: String = ""
+    private var propertyType: String = ""
+    private var propertyDescription: String = ""
+    private var propertyOwnerUserId: String = ""
+    private var propertyOwnerPhoneNumber: String = ""
+    private var propertyPlace: Place? = null
+    private var propertySize: Int = 0
+    private var propertyPrice: Int = 0
+    private var propertyScore: Int = 0
+    private var propertyVotersNumber: Int = 0
+    private var propertyBedroomsNumber: Int = 0
+    private var propertyBathroomsNumber: Int = 0
+    private var propertyHasGarage: Boolean = false
+    private var propertyHasTVRoom: Boolean = false
+    private var propertyHasBalcony: Boolean = false
+    private var propertyHasBathPlace: Boolean = false
+    private var propertyHasDiningRoom: Boolean = false
+    private var propertyHasBedroomBaby: Boolean = false
+    private var propertyImagesUrl: ArrayList<String> = arrayListOf()
+
     private val PICK_IMAGE_REQUEST = 1234
-    private val property_ref = FirebaseFirestore.getInstance()
+    private val propertyRef = FirebaseFirestore.getInstance()
         .collection("property")
-    private val like_apartment_ref = FirebaseFirestore.getInstance()
+    private val likedPropertyRef = FirebaseFirestore.getInstance()
         .collection("favorite_clicked")
-    private var image_list = ArrayList<Uri?>()
-    private var image_name_list = ArrayList<String>()
-    private var image_url = ArrayList<String>()
-    private var number_bedrooms: Int = 1
-    private var number_bathrooms: Int = 1
-    private var property_size: Int = 0
-    private var property_price: Int = 0
-    private var property_type: String = "apartment"
-    private lateinit var property_place: Place
-    private var property_description: String = ""
-    private var property_id: String = ""
-    private var property_user_id: String = ""
-    private var check_balcony = false
-    private var check_garage = false
-    private var check_bath = false
-    private var check_dinning = false
-    private var check_baby = false
-    private var check_tv = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        auth = FirebaseAuth.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
         return inflater.inflate(R.layout.fragment_post, container, false)
     }
 
@@ -88,45 +93,44 @@ class Fragment_Post : Fragment() {
         binding.propertyTypeRg.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.apartment_rb -> {
-                    property_type = "apartment"
-                }// Toast.makeText(context, "appa", Toast.LENGTH_SHORT).show()
+                    propertyType = "apartment"}
                 R.id.home_rb -> {
-                    property_type = "home"
+                    propertyType = "home"
                 }
             }
         }
         binding.bedroomRg.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.studio_rb -> {
-                    number_bedrooms = 0
+                    propertyBedroomsNumber = 0
                 }// Toast.makeText(context, "Studio", Toast.LENGTH_SHORT).show()
                 R.id.one_bed_rb -> {
-                    number_bedrooms = 1
+                    propertyBedroomsNumber = 1
                 }//  Toast.makeText(context, "1", Toast.LENGTH_SHORT).show()
                 R.id.two_bed_rb -> {
-                    number_bedrooms = 2
+                    propertyBedroomsNumber = 2
                 }//  Toast.makeText(context, "2", Toast.LENGTH_SHORT).show()
                 R.id.three_bed_rb -> {
-                    number_bedrooms = 3
+                    propertyBedroomsNumber = 3
                 }//  Toast.makeText(context, "3", Toast.LENGTH_SHORT).show()
                 R.id.four_bed_rb -> {
-                    number_bedrooms = 4
+                    propertyBedroomsNumber = 4
                 }//  Toast.makeText(context, "4", Toast.LENGTH_SHORT).show()
             }
         }
         binding.bathroomRg.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.one_bath_rb -> {
-                    number_bathrooms = 1
+                    propertyBathroomsNumber = 1
                 }//  Toast.makeText(context, "1", Toast.LENGTH_SHORT).show()
                 R.id.two_bath_rb -> {
-                    number_bathrooms = 2
+                    propertyBathroomsNumber = 2
                 }//  Toast.makeText(context, "2", Toast.LENGTH_SHORT).show()
                 R.id.three_bath_rb -> {
-                    number_bathrooms = 3
+                    propertyBathroomsNumber = 3
                 }//  Toast.makeText(context, "3", Toast.LENGTH_SHORT).show()
                 R.id.four_bath_rb -> {
-                    number_bathrooms = 4
+                    propertyBathroomsNumber = 4
                 }//  Toast.makeText(context, "4", Toast.LENGTH_SHORT).show()
             }
         }
@@ -140,28 +144,28 @@ class Fragment_Post : Fragment() {
 
         //setOnClickListener
         binding.balconyRb.setOnClickListener {
-            check_balcony = !check_balcony
-            binding.balconyRb.isChecked = check_balcony
+            propertyHasBalcony = !propertyHasBalcony
+            binding.balconyRb.isChecked = propertyHasBalcony
         }
         binding.garageRb.setOnClickListener {
-            check_garage = !check_garage
-            binding.garageRb.isChecked = check_garage
+            propertyHasGarage = !propertyHasGarage
+            binding.garageRb.isChecked = propertyHasGarage
         }
         binding.bathRb.setOnClickListener {
-            check_bath = !check_bath
-            binding.bathRb.isChecked = check_bath
+            propertyHasBathPlace = !propertyHasBathPlace
+            binding.bathRb.isChecked = propertyHasBathPlace
         }
         binding.diningRoomRb.setOnClickListener {
-            check_dinning = !check_dinning
-            binding.diningRoomRb.isChecked = check_dinning
+            propertyHasDiningRoom = !propertyHasDiningRoom
+            binding.diningRoomRb.isChecked = propertyHasDiningRoom
         }
         binding.bedroomBabyRb.setOnClickListener {
-            check_baby = !check_baby
-            binding.bedroomBabyRb.isChecked = check_baby
+            propertyHasBedroomBaby = !propertyHasBedroomBaby
+            binding.bedroomBabyRb.isChecked = propertyHasBedroomBaby
         }
         binding.tvRoomRb.setOnClickListener {
-            check_tv = !check_tv
-            binding.tvRoomRb.isChecked = check_tv
+            propertyHasTVRoom = !propertyHasTVRoom
+            binding.tvRoomRb.isChecked = propertyHasTVRoom
         }
         binding.addImagesImgv.setOnClickListener {
             handleImageClick()
@@ -171,34 +175,34 @@ class Fragment_Post : Fragment() {
             showPlacePicker()
         }
         binding.deleteLoadedImagesBtn.setOnClickListener {
-            image_list.clear()
-            image_name_list.clear()
+            imageList.clear()
+            imageNameList.clear()
             binding.deleteLoadedImagesBtn.visibility = View.GONE
         }
         binding.applyAndPublishBtn.setOnClickListener {
 
             if (binding.propertyPriceEdt.text.toString().isNotEmpty()) {
-                property_price = binding.propertyPriceEdt.text.toString().toInt()
+                propertyPrice = binding.propertyPriceEdt.text.toString().toInt()
             } else {
                 Toast.makeText(context, "Price must not be empty", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             if (binding.propertySizeEdt.text.toString().isNotEmpty()) {
-                property_size = binding.propertySizeEdt.text.toString().toInt()
+                propertySize = binding.propertySizeEdt.text.toString().toInt()
             } else {
                 Toast.makeText(context, "Size must not be empty", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (image_list.size < 1 || image_name_list.size < 1) {
+            if (imageList.size < 1 || imageNameList.size < 1) {
                 Toast.makeText(context, "You have to add at least 2 image", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
             }
 
-            property_description = binding.addDescriptionEdt.text.toString()
+            propertyDescription = binding.addDescriptionEdt.text.toString()
 
-            property_id = System.currentTimeMillis().toString() + "__" + property_user_id
+            propertyId = "${System.currentTimeMillis()}__$propertyOwnerUserId"
 
             progressDialog.setMessage("uploading...")
             progressDialog.show()
@@ -207,24 +211,22 @@ class Fragment_Post : Fragment() {
         }
     }
 
-    private fun uploadImages() = CoroutineScope(Dispatchers.IO).launch {
-        val user = auth.currentUser
-        image_url.clear()
+     private fun uploadImages() = CoroutineScope(Dispatchers.IO).launch {
+        val user = firebaseAuth.currentUser
+        propertyImagesUrl.clear()
         try {
-
-
-            for (i in 0 until image_list.size) {
-                val imageuri: Uri? = image_list[i]
+            for (i in 0 until imageList.size) {
+                val imageUri: Uri? = imageList[i]
 
                 val storageReference = FirebaseStorage.getInstance()
-                    .getReference("Post Images/" + user?.uid + "/images for " + property_id)
-                    .child(image_name_list[i])
+                    .getReference("Post Images/" + user?.uid + "/images for " + propertyId)
+                    .child(imageNameList[i])
 
-                val uploadTask = imageuri?.let { storageReference.putFile(it).await() }
+                val uploadTask = imageUri?.let { storageReference.putFile(it).await() }
 
                 val my_url = uploadTask?.storage?.downloadUrl?.await()
 
-                image_url.add(my_url.toString())
+                propertyImagesUrl.add(my_url.toString())
 
             }
             //without this, we will get error for the progressDialog:
@@ -232,49 +234,50 @@ class Fragment_Post : Fragment() {
             withContext(Dispatchers.Main) {
 
                 //after uploading images(s) we upload post
-                applied_published = Property(
-                    property_type,
-                    property_size,
-                    property_price,
-                    number_bedrooms,
-                    number_bathrooms,
-                    check_bath,
-                    check_dinning,
-                    check_garage,
-                    check_balcony,
-                    check_baby,
-                    check_tv,
-                    property_place,
-                    property_description,
-                    property_id,
-                    property_user_id,
-                    image_url
+                propertyToPublish = Property(
+                    propertyId,
+                    propertyType,
+                    propertyDescription,
+                    propertyOwnerUserId,
+                    propertyOwnerPhoneNumber,
+                    propertyPlace,
+                    propertySize,
+                    propertyPrice,
+                    propertyScore,
+                    propertyVotersNumber,
+                    propertyBedroomsNumber,
+                    propertyBathroomsNumber,
+                    propertyHasGarage,
+                    propertyHasTVRoom,
+                    propertyHasBalcony,
+                    propertyHasBathPlace,
+                    propertyHasDiningRoom,
+                    propertyHasBedroomBaby,
+                    propertyImagesUrl
                 )
 
-                apply_and_publish(applied_published)
+                apply_and_publish(propertyToPublish)
             }
 
 
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, "fatal error : " + e.message, Toast.LENGTH_LONG).show()
-                Log.d("*****", "" + e.message)
             }
-
         }
     }
 
     private fun apply_and_publish(post: Property) =
         CoroutineScope(Dispatchers.IO).launch {
-            val user = auth.currentUser
+
             val hashMap: HashMap<Any, String> = HashMap()
-            hashMap["post_id"] = property_id
+            hashMap["propertyId"] = propertyId
 
             try {
-                property_ref.document(post.property_id).set(post).await()
-                like_apartment_ref.document(post.property_id).set(hashMap).await()
+                propertyRef.document(post.propertyId).set(post).await()
+                likedPropertyRef.document(post.propertyId).set(hashMap).await()
 
-                //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
+                //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main) {
                     progressDialog.dismiss()
                     Toast.makeText(requireContext(), "Post added successfully", Toast.LENGTH_LONG)
@@ -290,7 +293,7 @@ class Fragment_Post : Fragment() {
                     progressDialog.dismiss()
                 }
             } catch (e: Exception) {
-                //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
+                //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main) {
                     progressDialog.dismiss()
                     Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
@@ -299,13 +302,13 @@ class Fragment_Post : Fragment() {
         }
 
     private fun checkUserConnection() {
-        val user = auth.currentUser
+        val user = firebaseAuth.currentUser
         if (user == null) {
             val intent = Intent(context, Activity_Login_or_Register::class.java)
             startActivity(intent)
             activity?.finish()
         } else {
-            property_user_id = user.uid
+            propertyOwnerUserId = user.uid
         }
     }
 
@@ -320,21 +323,21 @@ class Fragment_Post : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            data?.clipData?.let { clipdata ->
-                val count = clipdata.itemCount
+            data?.clipData?.let { clipData ->
+                val count = clipData.itemCount
                 var currentImageSelect = 0
-                image_list.clear()
-                image_name_list.clear()
+                imageList.clear()
+                imageNameList.clear()
 
                 while (currentImageSelect < count) {
-                    val imageuri: Uri = clipdata.getItemAt(currentImageSelect).uri
-                    val imagename = "image_$currentImageSelect"
-                    image_list.add(imageuri)
-                    image_name_list.add(imagename)
+                    val imageUri: Uri = clipData.getItemAt(currentImageSelect).uri
+                    val imageName = "image_$currentImageSelect"
+                    imageList.add(imageUri)
+                    imageNameList.add(imageName)
                     currentImageSelect += 1
                 }
-                val adapter_loaded_images = Recycler_Adapter_Loaded_Image_Uri(image_list)
-                binding.imagesAddedListRecyclerview.adapter = adapter_loaded_images
+                val adapterLoadedImages = Recycler_Adapter_Loaded_Image_Uri(imageList)
+                binding.imagesAddedListRecyclerview.adapter = adapterLoadedImages
                 binding.selectedImagesTv.visibility = View.VISIBLE
                 binding.deleteLoadedImagesBtn.visibility = View.VISIBLE
                 binding.addOrChangeTv.text = "Change Image(s)"
@@ -345,10 +348,8 @@ class Fragment_Post : Fragment() {
         }
         if ((requestCode == PLACE_PICKER_REQUEST) && (resultCode == Activity.RESULT_OK)) {
             val place: Place? = PingPlacePicker.getPlace(data!!)
-            property_place = place!!
-            binding.locationSelectedTv.text = "You selected: ${place?.name}"
-            Log.d("++++++ : ", "address : ${place?.address}, latlng : ${place?.latLng}, photo : ${place?.name}")
-            //Toast.makeText(context, "You selected: ${place?.name}", Toast.LENGTH_LONG).show()
+            propertyPlace = place
+            binding.locationSelectedTv.text = "You selected the location at : ${place?.address}"
         }
     }
 

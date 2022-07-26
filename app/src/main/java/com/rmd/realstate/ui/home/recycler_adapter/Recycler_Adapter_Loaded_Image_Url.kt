@@ -8,7 +8,7 @@ import com.rmd.realstate.R
 import com.rmd.realstate.databinding.RowLoadedImagesBinding
 import com.squareup.picasso.Picasso
 
-class Recycler_Adapter_Loaded_Image_Url(var loaded_image_list: ArrayList<String>) :
+class Recycler_Adapter_Loaded_Image_Url(var loadedImageList: ArrayList<String>) :
     RecyclerView.Adapter<Recycler_Adapter_Loaded_Image_Url.Loaded_Image_ViewHolder>() {
 
     inner class Loaded_Image_ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -24,12 +24,12 @@ class Recycler_Adapter_Loaded_Image_Url(var loaded_image_list: ArrayList<String>
         val binding = RowLoadedImagesBinding.bind(holder.itemView)
 
         holder.itemView.apply {
-            Picasso.get().load(loaded_image_list[position]).resize(300, 300)
+            Picasso.get().load(loadedImageList[position]).resize(300, 300)
                 .into(binding.loadedImageImgv)
         }
     }
 
     override fun getItemCount(): Int {
-        return loaded_image_list.size
+        return loadedImageList.size
     }
 }

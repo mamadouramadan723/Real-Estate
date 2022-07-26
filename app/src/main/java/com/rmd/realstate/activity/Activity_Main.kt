@@ -2,7 +2,6 @@ package com.rmd.realstate.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,17 +14,23 @@ import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.rmd.realstate.R
 import com.rmd.realstate.databinding.ActivityMainBinding
-
-
-
-
-
+import com.rmd.realstate.model.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class Activity_Main : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var firebaseAuth: FirebaseAuth
+
+    private val profileRef = FirebaseFirestore.getInstance().collection("profile")
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,23 +40,24 @@ class Activity_Main : AppCompatActivity() {
 
         val navView: BottomNavigationView = binding.navView
 
-        val navController = findNavController(com.rmd.realstate.R.id.nav_host_fragment_activity_main)
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                com.rmd.realstate.R.id.navigation_home,
-                com.rmd.realstate.R.id.navigation_post,
-                com.rmd.realstate.R.id.navigation_saved,
-                com.rmd.realstate.R.id.navigation_profile
+                R.id.navigation_home,
+                R.id.navigation_post,
+                R.id.navigation_saved,
+                R.id.navigation_profile
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == com.rmd.realstate.R.id.navigation_filter || destination.id == com.rmd.realstate.R.id.navigation_post ||
-                destination.id == com.rmd.realstate.R.id.navigation_post_modify || destination.id == com.rmd.realstate.R.id.navigation_view_apart) {
+            if (destination.id == R.id.navigation_filter || destination.id == R.id.navigation_post ||
+                destination.id == R.id.navigation_post_modify || destination.id == R.id.navigation_view_apart
+            ) {
                 navView.visibility = View.GONE
             } else {
                 navView.visibility = View.VISIBLE
@@ -64,15 +70,62 @@ class Activity_Main : AppCompatActivity() {
             val providers: List<AuthUI.IdpConfig> = listOf(
                 AuthUI.IdpConfig.EmailBuilder().build()
             )
-            Log.d("++++++link = ", link)
+
             startActivityForResult(
-                AuthUI.getInstance()
-                    .createSignInIntentBuilder()
+                AuthUI.getInstance().createSignInIntentBuilder()
                     .setEmailLink(link)
                     .setAvailableProviders(providers)
-                    .build(),
-                Activity_Login_or_Register.AUTH_REQUEST_CODE
+                    .build(), AUTH_REQUEST_CODE
             )
+            uploadUserInfos()
+        }
+    }
+
+    private fun uploadUserInfos() {
+        firebaseAuth = FirebaseAuth.getInstance()
+        val user = firebaseAuth.currentUser
+        user?.let {
+            val myUserId = user.uid
+            val myUserMail = user.email ?: ""
+            val myUsername = user.displayName ?: ""
+            val myPhoneNumber = user.phoneNumber ?: ""
+            val myUserImageUrl =
+                "https://firebasestorage.googleapis.com/v0/b/real-state-723.appspot.com/o/default%2Fworkspace.png?alt=media&token=d2624d4b-8656-403b-9d6e-9bbfebaebb25"
+
+            val myUser = User(
+                myUserId,
+                myUsername,
+                myUserMail,
+                myUserImageUrl,
+                myPhoneNumber,
+            )
+            uploadData(myUser)
+        }
+    }
+
+    private fun uploadData(myUser: User) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            profileRef.document(myUser.userId).set(myUser).await()
+
+            //As we can't directly access to UI within a coroutine, we use withContext
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    this@Activity_Main,
+                    "User added successfully",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                //As soon as I register, return to main
+                val intent = Intent(this@Activity_Main, Activity_Main::class.java)
+                startActivity(intent)
+                finish()
+            }
+        } catch (e: Exception) {
+
+            //As we can't directly access to UI within a coroutine, we use withContext
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@Activity_Main, e.message, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -99,6 +152,7 @@ class Activity_Main : AppCompatActivity() {
         }
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -106,8 +160,9 @@ class Activity_Main : AppCompatActivity() {
         val id: Int = item.itemId
         if (id == R.id.action_signout) {
             if (FirebaseAuth.getInstance().currentUser != null) {
-                Toast.makeText(this, "Deconnection", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Disconnection", Toast.LENGTH_SHORT).show()
                 FirebaseAuth.getInstance().signOut()
+                refresh()
             } else {
                 startActivity(Intent(this, Activity_Login_or_Register::class.java))
             }
@@ -115,5 +170,14 @@ class Activity_Main : AppCompatActivity() {
             startActivity(Intent(this, Activity_Settings::class.java))
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun refresh() {
+        finish()
+        startActivity(intent)
+    }
+
+    companion object {
+        private const val AUTH_REQUEST_CODE = 1
     }
 }

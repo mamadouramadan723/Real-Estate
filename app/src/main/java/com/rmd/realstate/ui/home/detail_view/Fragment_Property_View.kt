@@ -41,30 +41,29 @@ import java.net.URLEncoder
 class Fragment_Property_View : Fragment() {
 
     //declaration
-    private lateinit var auth: FirebaseAuth
-    private lateinit var my_view_pager: ViewPager2
-    private lateinit var binding: FragmentApartmentViewBinding
-    private lateinit var binding_raw: RawApartmentBannerPriceScoreBinding
-    private lateinit var my_property_viewModel: SharedViewModel_Property
-    private lateinit var view_pager_adapterSlideViewPager: Recycler_Adapter_Slide_View_Pager
-
-    private var property_id: String = ""
-    private var property_owner_phone_number = ""
-    private var favorite_clicked: Boolean = false
+    private lateinit var viewPager: ViewPager2
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var progressDialog: ProgressDialog
-    private var image_list: ArrayList<String> = arrayListOf()
+    private lateinit var binding: FragmentApartmentViewBinding
+    private lateinit var sharedViewModel: SharedViewModel_Property
+    private lateinit var bindingRaw: RawApartmentBannerPriceScoreBinding
+    private lateinit var recyclerAdapterSlideViewPager: Recycler_Adapter_Slide_View_Pager
 
+    private var propertyId: String = ""
+    private var ownerPhoneNumber: String = ""
+    private var favoriteClicked: Boolean = false
+    private var imageList: ArrayList<String> = arrayListOf()
 
-    private val property_ref = FirebaseFirestore.getInstance()
+    private val propertyRef = FirebaseFirestore.getInstance()
         .collection("property")
-    private val favorite_clicked_ref = FirebaseFirestore.getInstance()
+    private val favoriteClickedRef = FirebaseFirestore.getInstance()
         .collection("favorite_clicked")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        auth = FirebaseAuth.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
         return inflater.inflate(R.layout.fragment_apartment_view, container, false)
     }
 
@@ -74,25 +73,25 @@ class Fragment_Property_View : Fragment() {
 
         binding = FragmentApartmentViewBinding.bind(view)
         progressDialog = ProgressDialog(requireContext())
-        binding_raw = RawApartmentBannerPriceScoreBinding.bind(view)
-        my_property_viewModel =
+        bindingRaw = RawApartmentBannerPriceScoreBinding.bind(view)
+        sharedViewModel =
             ViewModelProvider(requireActivity())[SharedViewModel_Property::class.java]
 
         //viewpager
-        my_view_pager = binding.apartImageViewPager
-        view_pager_adapterSlideViewPager = Recycler_Adapter_Slide_View_Pager(image_list)
-        my_view_pager.adapter = view_pager_adapterSlideViewPager
-        my_view_pager.registerOnPageChangeCallback(onImageChangeCallback)
+        viewPager = binding.apartImageViewPager
+        recyclerAdapterSlideViewPager = Recycler_Adapter_Slide_View_Pager(imageList)
+        viewPager.adapter = recyclerAdapterSlideViewPager
+        viewPager.registerOnPageChangeCallback(onImageChangeCallback)
 
 
         //setOnClickListener
         binding.likeApartIbtn.setOnClickListener {
-            favorite_clicked = true
-            update_property_like()
+            favoriteClicked = true
+            updatePropertyLikes()
         }
         binding.contactByCallBtn.setOnClickListener {
             val dialIntent = Intent(Intent.ACTION_DIAL)
-            dialIntent.data = Uri.parse("tel:$property_owner_phone_number")
+            dialIntent.data = Uri.parse("tel:$ownerPhoneNumber")
             startActivity(dialIntent)
         }
         binding.contactByMessageBtn.setOnClickListener {
@@ -102,7 +101,7 @@ class Fragment_Property_View : Fragment() {
                     "S'il vous plaît, je suis interessé par votre appartment que vous avez publié sur" +
                     " ${resources.getString(R.string.app_name)}"
             val url =
-                "https://api.whatsapp.com/send?phone=+212$property_owner_phone_number&text=" + URLEncoder.encode(
+                "https://api.whatsapp.com/send?phone=+212$ownerPhoneNumber&text=" + URLEncoder.encode(
                     text, "UTF-8"
                 )
             //val url = "https://wa.me/send?phone=+212680523387" //+ "&text=" + URLEncoder.encode("Hello","UTF-8")
@@ -116,31 +115,30 @@ class Fragment_Property_View : Fragment() {
             startActivity(intent)
         }
 
-        binding_raw.moreBtn.setOnClickListener {
+        bindingRaw.moreBtn.setOnClickListener {
             show_more_options()
         }
 
         //shared viewModels
-        my_property_viewModel.my_property.observe(viewLifecycleOwner, {
-            property_id = it
-        })
+        sharedViewModel.my_property.observe(viewLifecycleOwner) {
+            propertyId = it
+        }
 
         //functions
-        get_apart_info()
-        set_apart_like_btn()
+        getPropertyInfos()
+        setApartLikeBtn()
     }
 
     private fun show_more_options() {
-        val popupMenu = PopupMenu(requireContext(), binding_raw.moreBtn, Gravity.END)
+        val popupMenu = PopupMenu(requireContext(), bindingRaw.moreBtn, Gravity.END)
 
         popupMenu.menu.add(Menu.NONE, 0, 0, "Modify")
         popupMenu.menu.add(Menu.NONE, 1, 0, "Delete")
-        //popupMenu.menu.add(Menu.NONE, 2, 0, "")
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 0 -> {
                     //set the id of the clicked post
-                    my_property_viewModel.set_property_id(property_id)
+                    sharedViewModel.set_property_id(propertyId)
 
                     NavHostFragment.findNavController(this)
                         .navigate(R.id.action_navigation_view_apart_to_navigation_post_modify)
@@ -154,7 +152,7 @@ class Fragment_Property_View : Fragment() {
                     alertDialog.setPositiveButton("Yes") { _, _ ->
                         progressDialog.setMessage("Deleting...")
                         progressDialog.show()
-                        delete_this_publication()
+                        deleteThisPublication()
                     }
                     alertDialog.setNeutralButton("Cancel") { _, _ ->
                     }
@@ -166,10 +164,10 @@ class Fragment_Property_View : Fragment() {
         popupMenu.show()
     }
 
-    private fun delete_this_publication() = CoroutineScope(Dispatchers.IO).launch {
+    private fun deleteThisPublication() = CoroutineScope(Dispatchers.IO).launch {
         try {
-            property_ref.document(property_id).delete().await()
-            favorite_clicked_ref.document(property_id).delete().await()
+            propertyRef.document(propertyId).delete().await()
+            favoriteClickedRef.document(propertyId).delete().await()
 
             withContext(Dispatchers.Main) {
                 NavHostFragment.findNavController(this@Fragment_Property_View)
@@ -178,7 +176,7 @@ class Fragment_Property_View : Fragment() {
                 Toast.makeText(context, "Post Deleted", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
-            //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
+            //As we can't directly access to UI within a coroutine, we use withContext
             withContext(Dispatchers.Main) {
                 progressDialog.dismiss()
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
@@ -187,7 +185,7 @@ class Fragment_Property_View : Fragment() {
     }
 
     private fun checkUserConnection() {
-        val user = auth.currentUser
+        val user = firebaseAuth.currentUser
         if (user == null) {
             val intent = Intent(context, Activity_Login_or_Register::class.java)
             startActivity(intent)
@@ -195,17 +193,17 @@ class Fragment_Property_View : Fragment() {
         }
     }
 
-    private fun update_property_like() = CoroutineScope(Dispatchers.IO).launch {
-        val user = auth.currentUser
-        favorite_clicked = true
+    private fun updatePropertyLikes() = CoroutineScope(Dispatchers.IO).launch {
+        val user = firebaseAuth.currentUser
+        favoriteClicked = true
 
         try {
             user?.let {
                 withContext(Dispatchers.Main) {
                     val documentSnapshot =
-                        favorite_clicked_ref.document(property_id).get().await()
+                        favoriteClickedRef.document(propertyId).get().await()
 
-                    if (favorite_clicked) {
+                    if (favoriteClicked) {
 
                         val map: MutableMap<String, Any>? = documentSnapshot.data
 
@@ -217,41 +215,41 @@ class Fragment_Property_View : Fragment() {
                                 val updates: MutableMap<String, Any> = HashMap()
                                 updates[user.uid] = FieldValue.delete()
 
-                                favorite_clicked_ref.document(property_id).update(updates)
+                                favoriteClickedRef.document(propertyId).update(updates)
                                     .await()
 
                                 //unlike successful ==> so we can click the button again
-                                favorite_clicked = false
-                                set_apart_like_btn()
+                                favoriteClicked = false
+                                setApartLikeBtn()
                             } else {
                                 val add: MutableMap<String, Any> = HashMap()
                                 add[user.uid] = "OK"
-                                favorite_clicked_ref.document(property_id).update(add).await()
+                                favoriteClickedRef.document(propertyId).update(add).await()
 
                                 //like successful ==> so we can click the button again
-                                favorite_clicked = false
-                                set_apart_like_btn()
+                                favoriteClicked = false
+                                setApartLikeBtn()
                             }
                         }
                     }
                 }
             }
         } catch (e: Exception) {
-            //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
+            //As we can't directly access to UI within a coroutine, we use withContext
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun set_apart_like_btn() = CoroutineScope(Dispatchers.IO).launch {
-        val user = auth.currentUser
+    private fun setApartLikeBtn() = CoroutineScope(Dispatchers.IO).launch {
+        val user = firebaseAuth.currentUser
         try {
             user?.let {
                 withContext(Dispatchers.Main) {
 
                     val documentSnapshot =
-                        favorite_clicked_ref.document(property_id).get().await()
+                        favoriteClickedRef.document(propertyId).get().await()
                     val map: MutableMap<String, Any>? = documentSnapshot.data
                     map?.let {
                         if (map.containsKey(user.uid)) {
@@ -263,7 +261,7 @@ class Fragment_Property_View : Fragment() {
                 }
             }
         } catch (e: Exception) {
-            //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
+            //As we can't directly access to UI within a coroutine, we use withContext
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
@@ -271,63 +269,62 @@ class Fragment_Property_View : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun get_apart_info() = CoroutineScope(Dispatchers.IO).launch {
-        val user = auth.currentUser
-        image_list.clear()
+    private fun getPropertyInfos() = CoroutineScope(Dispatchers.IO).launch {
+        val user = firebaseAuth.currentUser
+        imageList.clear()
         try {
             withContext(Dispatchers.Main) {
-                val documentSnapshot = property_ref.document(property_id).get().await()
-                val apartment = documentSnapshot.toObject(Property::class.java)
-                apartment?.let {
-                    binding_raw.thisApartmentPriceTv.text =
-                        apartment.property_price.toString() + " DH/Month"
+                val documentSnapshot = propertyRef.document(propertyId).get().await()
+                val property = documentSnapshot.toObject(Property::class.java)
+                property?.let {
+                    bindingRaw.thisApartmentPriceTv.text =
+                        "${property.propertyPrice} DH/Month"
 
-
-                    image_list = apartment.image_url
-                    view_pager_adapterSlideViewPager =
-                        Recycler_Adapter_Slide_View_Pager(image_list)
-                    my_view_pager.adapter = view_pager_adapterSlideViewPager
+                    imageList = property.propertyImagesUrl
+                    recyclerAdapterSlideViewPager =
+                        Recycler_Adapter_Slide_View_Pager(imageList)
+                    viewPager.adapter = recyclerAdapterSlideViewPager
 
                     //
-                    if (apartment.property_user_id == user?.uid) {
-                        binding_raw.moreBtn.isVisible = true
+                    if (property.propertyOwnerUserId == user?.uid) {
+                        bindingRaw.moreBtn.isVisible = true
                         //binding.layoutContact.isVisible = false
                     }
-                    get_owner_phone_number(apartment.property_user_id)
+                    get_owner_phone_number(property.propertyOwnerUserId)
                 }
             }
         } catch (e: Exception) {
-            //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
+            //As we can't directly access to UI within a coroutine, we use withContext
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun get_owner_phone_number(propertyUserId: String) =
+    private fun get_owner_phone_number(propertyOwnerUserId: String) =
         CoroutineScope(Dispatchers.IO).launch {
-            val profile_ref = FirebaseFirestore.getInstance().collection("profile")
-            val myDocumentSnapshot = profile_ref.document(propertyUserId).get().await()
-            val property_owner = myDocumentSnapshot.toObject<User>()
+            val profileRef = FirebaseFirestore.getInstance().collection("profile")
+            val myDocumentSnapshot = profileRef.document(propertyOwnerUserId).get().await()
+            val propertyOwner = myDocumentSnapshot.toObject<User>()
 
-            property_owner?.let {
-                property_owner_phone_number = property_owner.phonenumber
+            propertyOwner?.let {
+                ownerPhoneNumber = propertyOwner.userPhoneNumber
             }
         }
 
     private var onImageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
-            add_dots(position)
+            addDots(position)
         }
     }
 
-    private fun add_dots(position: Int) {
+    private fun addDots(position: Int) {
         binding.dotsImageLayout.removeAllViews()
 
-        val dots: Array<TextView?> = arrayOfNulls(image_list.size)
+        val dots: Array<TextView?> = arrayOfNulls(imageList.size)
 
-        for (i in 0 until image_list.size) {
+        for (i in 0 until imageList.size) {
 
             dots[i] = TextView(requireContext())
 
@@ -348,7 +345,7 @@ class Fragment_Property_View : Fragment() {
     }
 
     override fun onDestroy() {
-        my_view_pager.unregisterOnPageChangeCallback(onImageChangeCallback)
+        viewPager.unregisterOnPageChangeCallback(onImageChangeCallback)
         super.onDestroy()
     }
 }

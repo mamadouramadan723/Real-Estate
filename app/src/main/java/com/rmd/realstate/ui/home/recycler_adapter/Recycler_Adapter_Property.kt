@@ -18,27 +18,26 @@ import com.rmd.realstate.view_model.SharedViewModel_Property
 import com.squareup.picasso.Picasso
 import java.util.*
 
-
 class Recycler_Adapter_Property(
-    private var my_context: Fragment,
-    private var my_activity: FragmentActivity,
-    private var action_id: Int,
-    private var property_list: ArrayList<Property>
+    private var myContext: Fragment,
+    private var myActivity: FragmentActivity,
+    private var actionId: Int,
+    private var propertyList: ArrayList<Property>
 
 ) : RecyclerView.Adapter<Recycler_Adapter_Property.Property_ViewHolder>(), Filterable {
 
     inner class Property_ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    private lateinit var my_property_viewModel: SharedViewModel_Property
-    private var all_properties = ArrayList<Property>()
+    private lateinit var sharedViewModelProperty: SharedViewModel_Property
+    private var allProperties = ArrayList<Property>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Property_ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.row_property, parent, false)
 
-        my_property_viewModel =
-            ViewModelProvider(my_activity)[SharedViewModel_Property::class.java]
-        all_properties = property_list
+        sharedViewModelProperty =
+            ViewModelProvider(myActivity)[SharedViewModel_Property::class.java]
+        allProperties = propertyList
         return Property_ViewHolder(view)
     }
 
@@ -49,55 +48,54 @@ class Recycler_Adapter_Property(
 
         holder.itemView.apply {
 
-            binding.apartmentLocationTv.text = property_list[position].property_place.address
-            binding.apartmentSurface.text = property_list[position].property_size.toString()
-            binding.apartmentBedNumber.text = property_list[position].number_bedrooms.toString()
+            binding.apartmentSurface.text = propertyList[position].propertySize.toString()
+            binding.apartmentLocationTv.text = propertyList[position].propertyPlace?.address
+            binding.apartmentBedNumber.text =
+                propertyList[position].propertyBedroomsNumber.toString()
             binding.apartmentPriceTv.text =
-                property_list[position].property_price.toString() + " DH"
+                propertyList[position].propertyPrice.toString() + " DH"
             binding.apartmentBathroomNumber.text =
-                property_list[position].number_bathrooms.toString()
+                propertyList[position].propertyBathroomsNumber.toString()
 
             //show image randomly
-            val i = property_list[position].image_url.size
+            val i = propertyList[position].propertyImagesUrl.size
             Picasso.get()
-                .load(property_list[position].image_url[(0 until i).random()])
+                .load(propertyList[position].propertyImagesUrl[(0 until i).random()])
                 .resize(300, 300).into(binding.apartmentProfileImgv)
         }
 
         holder.itemView.setOnClickListener {
-            val apart_id = property_list[position].property_id
-            my_property_viewModel.set_property_id(apart_id)
+            val apart_id = propertyList[position].propertyId
+            sharedViewModelProperty.set_property_id(apart_id)
 
-            NavHostFragment.findNavController(my_context)
-                .navigate(action_id)
-
+            NavHostFragment.findNavController(myContext)
+                .navigate(actionId)
         }
     }
 
-
     override fun getItemCount(): Int {
-        return property_list.size
+        return propertyList.size
     }
 
     override fun getFilter(): Filter {
         return filter_property
     }
 
-
     private val filter_property: Filter = object : Filter() {
         override fun performFiltering(charSequence: CharSequence): FilterResults {
             val search_text = charSequence.toString().lowercase(Locale.getDefault())
             val temp_list: MutableList<Property> = ArrayList()
             if (search_text.isEmpty()) {
-                temp_list.addAll(all_properties)
+                temp_list.addAll(allProperties)
             } else {
-                for (item in all_properties) {
-                    if (item.property_place.address.lowercase(Locale.getDefault()).contains(search_text)
+                for (item in allProperties) {
+                    /*if (item.propertyPlace?.address?.lowercase(Locale.getDefault())
+                            .contains(search_text)
                         || item.property_description.lowercase(Locale.getDefault())
                             .contains(search_text)
                     ) {
                         temp_list.add(item)
-                    }
+                    }*/
                 }
             }
             val filterResults = FilterResults()
@@ -107,8 +105,8 @@ class Recycler_Adapter_Property(
 
         @SuppressLint("NotifyDataSetChanged")
         override fun publishResults(constraint: CharSequence, filterResults: FilterResults) {
-            property_list.clear()
-            property_list.addAll(filterResults.values as Collection<Property>)
+            propertyList.clear()
+            propertyList.addAll(filterResults.values as Collection<Property>)
             notifyDataSetChanged()
         }
     }

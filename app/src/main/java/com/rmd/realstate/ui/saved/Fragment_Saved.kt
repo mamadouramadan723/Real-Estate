@@ -24,15 +24,15 @@ import kotlinx.coroutines.withContext
 class Fragment_Saved : Fragment() {
 
     //declarations
-    private lateinit var auth: FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var binding: FragmentSavedBinding
     private lateinit var mLayoutManager: LinearLayoutManager
 
-    private var property_list = ArrayList<Property>()
+    private var propertyList = ArrayList<Property>()
 
-    private val property_ref = FirebaseFirestore.getInstance()
+    private val propertyRef = FirebaseFirestore.getInstance()
         .collection("property")
-    private val favorite_clicked_ref = FirebaseFirestore.getInstance()
+    private val favoriteClickedRef = FirebaseFirestore.getInstance()
         .collection("favorite_clicked")
 
 
@@ -40,7 +40,7 @@ class Fragment_Saved : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        auth = FirebaseAuth.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
         return inflater.inflate(R.layout.fragment_saved, container, false)
     }
 
@@ -59,12 +59,12 @@ class Fragment_Saved : Fragment() {
         binding.likedApartmentsListRecyclerview.layoutManager = mLayoutManager
 
         //functions
-        get_all_liked_post()
+        getAllLikedPost()
     }
 
     /*checkUserConnection*/
     private fun checkUserConnection() {
-        val user = auth.currentUser
+        val user = firebaseAuth.currentUser
         if (user == null) {
             val intent = Intent(context, Activity_Login_or_Register::class.java)
             startActivity(intent)
@@ -73,15 +73,15 @@ class Fragment_Saved : Fragment() {
     }
 
     /*Get All Post Liked By The Current User*/
-    private fun get_all_liked_post() = CoroutineScope(Dispatchers.IO).launch {
+    private fun getAllLikedPost() = CoroutineScope(Dispatchers.IO).launch {
 
-        property_list.clear()
-        val user = auth.currentUser
+        propertyList.clear()
+        val user = firebaseAuth.currentUser
 
         try {
             user?.let {
 
-                val myQuerySnapshot = favorite_clicked_ref.get().await()
+                val myQuerySnapshot = favoriteClickedRef.get().await()
 
                 myQuerySnapshot.documents.mapNotNull { documentSnapshot ->
 
@@ -91,12 +91,12 @@ class Fragment_Saved : Fragment() {
 
                         if (map.containsKey(user.uid)) {
 
-                            val property_id = map.getValue("post_id").toString()
+                            val propertyId = map.getValue("post_id").toString()
                             val myDocumentSnapshot =
-                                property_ref.document(property_id).get().await()
+                                propertyRef.document(propertyId).get().await()
                             val apartment = myDocumentSnapshot.toObject(Property::class.java)
 
-                            property_list.add(apartment!!)
+                            propertyList.add(apartment!!)
 
                             //As we can't directly access to UI within a coroutine, we use withContext
                             withContext(Dispatchers.Main) {
@@ -104,7 +104,7 @@ class Fragment_Saved : Fragment() {
                                     this@Fragment_Saved,
                                     requireActivity(),
                                     R.id.action_navigation_saved_to_navigation_view_apart,
-                                    property_list
+                                    propertyList
                                 )
                                 binding.likedApartmentsListRecyclerview.adapter = adapter_apartment
                             }

@@ -26,15 +26,16 @@ import kotlinx.coroutines.withContext
 class Fragment_Profile : Fragment() {
 
     //variable declaration
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var auth: FirebaseAuth
-    private val profile_ref = FirebaseFirestore.getInstance().collection("profile")
+
+    private val profileRef = FirebaseFirestore.getInstance().collection("profile")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        auth = FirebaseAuth.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
@@ -48,12 +49,10 @@ class Fragment_Profile : Fragment() {
             NavHostFragment.findNavController(this)
                 .navigate(R.id.action_navigation_profile_to_navigation_update_profile)
         }
-
-
     }
 
     private fun checkUserConnection() {
-        val user = auth.currentUser
+        val user = firebaseAuth.currentUser
         if (user == null) {
             val intent = Intent(context, Activity_Login_or_Register::class.java)
             startActivity(intent)
@@ -64,10 +63,10 @@ class Fragment_Profile : Fragment() {
     }
 
     private fun getUserInfos() = CoroutineScope(Dispatchers.IO).launch {
-        val user = auth.currentUser
+        val user = firebaseAuth.currentUser
         try {
             user?.let {
-                val myDocumentSnapshot = profile_ref.document(user.uid).get().await()
+                val myDocumentSnapshot = profileRef.document(user.uid).get().await()
                 val myUser = myDocumentSnapshot.toObject<User>()
 
                 /*val stringBuilder = StringBuilder()
@@ -77,14 +76,14 @@ class Fragment_Profile : Fragment() {
                 //As we can't directly access to UI within a coroutine, we use withContext
                 withContext(Dispatchers.Main) {
                     myUser?.let {
-                        binding.mailTv.text = myUser.mail
-                        binding.usernameTv.text = myUser.username
-                        binding.phoneNumberTv.text = myUser.phonenumber
-                        Picasso.get().load(myUser.image_url).into(binding.profileImgv)
+                        binding.mailTv.text = myUser.userMail
+                        binding.usernameTv.text = myUser.userName
+                        binding.phoneNumberTv.text = myUser.userPhoneNumber
+                        Picasso.get().load(myUser.userImageUrl).into(binding.profileImgv)
 
-                        if (myUser.mail == "null") binding.mailTv.isVisible = false
-                        if (myUser.username == "null") binding.usernameTv.isVisible = false
-                        if (myUser.phonenumber == "null") binding.phoneNumberTv.isVisible = false
+                        if (myUser.userMail == "null") binding.mailTv.isVisible = false
+                        if (myUser.userName == "null") binding.usernameTv.isVisible = false
+                        if (myUser.userPhoneNumber == "null") binding.phoneNumberTv.isVisible = false
                     }
                 }
             }

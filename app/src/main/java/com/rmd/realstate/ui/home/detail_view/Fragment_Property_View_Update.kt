@@ -10,9 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -32,7 +29,6 @@ import com.rmd.realstate.activity.Activity_Login_or_Register
 import com.rmd.realstate.databinding.FragmentPostBinding
 import com.rmd.realstate.model.Property
 import com.rmd.realstate.ui.home.recycler_adapter.Recycler_Adapter_Loaded_Image_Url
-import com.rmd.realstate.ui.post.Fragment_Post
 import com.rmd.realstate.ui.post.recycler_adapter.Recycler_Adapter_Loaded_Image_Uri
 import com.rmd.realstate.view_model.SharedViewModel_Property
 import com.rtchagas.pingplacepicker.PingPlacePicker
@@ -45,33 +41,33 @@ import kotlinx.coroutines.withContext
 
 class Fragment_Property_View_Update : Fragment() {
 
-    private lateinit var my_property_viewModel: SharedViewModel_Property
+    private lateinit var propertyViewmodel: SharedViewModel_Property
     private lateinit var applied_published: Property
     private lateinit var auth: FirebaseAuth
     private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: FragmentPostBinding
-    private var property__id: String = ""
+    private var mPropertyId: String = ""
     private val post_apartment_ref = FirebaseFirestore.getInstance()
         .collection("property")
 
     private val PICK_IMAGE_REQUEST = 1234
-    private var image_list = ArrayList<Uri?>()
-    private var image_name_list = ArrayList<String>()
-    private var image_url = ArrayList<String>()
-    private var number_bedrooms = 1
-    private var number_bathrooms = 1
-    private var property_size = 0
-    private var property_price = 0
-    private var property_type = "apartment"
-    private lateinit var property_place : Place
-    private var property_description = ""
-    private var property_id = ""
-    private var check_balcony = false
-    private var check_garage = false
-    private var check_bath = false
-    private var check_dinning = false
-    private var check_baby = false
-    private var check_tv = false
+    private var imageList = ArrayList<Uri?>()
+    private var imageNameList = ArrayList<String>()
+    private var propertyImagesUrl = ArrayList<String>()
+    private var propertyBedroomsNumber = 1
+    private var propertyBathroomsNumber = 1
+    private var propertySize = 0
+    private var propertyPrice = 0
+    private var propertyType = "apartment"
+    private lateinit var propertyPlace: Place
+    private var propertyDescription = ""
+    private var propertyId = ""
+    private var propertyHasBalcony = false
+    private var propertyHasGarage = false
+    private var propertyHasBathPlace = false
+    private var propertyHasDiningRoom = false
+    private var propertyHasBabyBedroom = false
+    private var propertyHasTVRoom = false
     //
 
     override fun onCreateView(
@@ -102,73 +98,73 @@ class Fragment_Property_View_Update : Fragment() {
         binding.propertyTypeRg.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.apartment_rb -> {
-                    property_type = "apartment"
+                    propertyType = "apartment"
                 }
                 R.id.home_rb -> {
-                    property_type = "home"
+                    propertyType = "home"
                 }
             }
         }
         binding.bedroomRg.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.studio_rb -> {
-                    number_bedrooms = 0
+                    propertyBedroomsNumber = 0
                 }
                 R.id.one_bed_rb -> {
-                    number_bedrooms = 1
+                    propertyBedroomsNumber = 1
                 }
                 R.id.two_bed_rb -> {
-                    number_bedrooms = 2
+                    propertyBedroomsNumber = 2
                 }
                 R.id.three_bed_rb -> {
-                    number_bedrooms = 3
+                    propertyBedroomsNumber = 3
                 }
                 R.id.four_bed_rb -> {
-                    number_bedrooms = 4
+                    propertyBedroomsNumber = 4
                 }
             }
         }
         binding.bathroomRg.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.one_bath_rb -> {
-                    number_bathrooms = 1
+                    propertyBathroomsNumber = 1
                 }
                 R.id.two_bath_rb -> {
-                    number_bathrooms = 2
+                    propertyBathroomsNumber = 2
                 }
                 R.id.three_bath_rb -> {
-                    number_bathrooms = 3
+                    propertyBathroomsNumber = 3
                 }
                 R.id.four_bath_rb -> {
-                    number_bathrooms = 4
+                    propertyBathroomsNumber = 4
                 }
             }
         }
 
         //setOnClickListener
         binding.balconyRb.setOnClickListener {
-            check_balcony = !check_balcony
-            binding.balconyRb.isChecked = check_balcony
+            propertyHasBalcony = !propertyHasBalcony
+            binding.balconyRb.isChecked = propertyHasBalcony
         }
         binding.garageRb.setOnClickListener {
-            check_garage = !check_garage
-            binding.garageRb.isChecked = check_garage
+            propertyHasGarage = !propertyHasGarage
+            binding.garageRb.isChecked = propertyHasGarage
         }
         binding.bathRb.setOnClickListener {
-            check_bath = !check_bath
-            binding.bathRb.isChecked = check_bath
+            propertyHasBathPlace = !propertyHasBathPlace
+            binding.bathRb.isChecked = propertyHasBathPlace
         }
         binding.diningRoomRb.setOnClickListener {
-            check_dinning = !check_dinning
-            binding.diningRoomRb.isChecked = check_dinning
+            propertyHasDiningRoom = !propertyHasDiningRoom
+            binding.diningRoomRb.isChecked = propertyHasDiningRoom
         }
         binding.bedroomBabyRb.setOnClickListener {
-            check_baby = !check_baby
-            binding.bedroomBabyRb.isChecked = check_baby
+            propertyHasBabyBedroom = !propertyHasBabyBedroom
+            binding.bedroomBabyRb.isChecked = propertyHasBabyBedroom
         }
         binding.tvRoomRb.setOnClickListener {
-            check_tv = !check_tv
-            binding.tvRoomRb.isChecked = check_tv
+            propertyHasTVRoom = !propertyHasTVRoom
+            binding.tvRoomRb.isChecked = propertyHasTVRoom
         }
         binding.addImagesImgv.setOnClickListener {
             handleImageClick()
@@ -179,9 +175,9 @@ class Fragment_Property_View_Update : Fragment() {
         }
 
         binding.deleteLoadedImagesBtn.setOnClickListener {
-            image_list.clear()
-            image_name_list.clear()
-            if (image_url.isNotEmpty()) {
+            imageList.clear()
+            imageNameList.clear()
+            if (propertyImagesUrl.isNotEmpty()) {
                 //popup for confirmation
                 val alertDialog = AlertDialog.Builder(requireContext())
                 alertDialog.setTitle("Delete Images from The Cloud")
@@ -200,39 +196,39 @@ class Fragment_Property_View_Update : Fragment() {
         binding.applyAndPublishBtn.setOnClickListener {
 
             if (binding.propertyPriceEdt.text.toString().isNotEmpty()) {
-                property_price = binding.propertyPriceEdt.text.toString().toInt()
+                propertyPrice = binding.propertyPriceEdt.text.toString().toInt()
             } else {
                 Toast.makeText(context, "Price must not be empty", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             if (binding.propertySizeEdt.text.toString().isNotEmpty()) {
-                property_size = binding.propertySizeEdt.text.toString().toInt()
+                propertySize = binding.propertySizeEdt.text.toString().toInt()
             } else {
                 Toast.makeText(context, "Size must not be empty", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            property_description = binding.addDescriptionEdt.text.toString()
+            propertyDescription = binding.addDescriptionEdt.text.toString()
 
             progressDialog.setMessage("uploading...")
             progressDialog.show()
             uploadImages()
         }
         //
-        my_property_viewModel =
+        propertyViewmodel =
             ViewModelProvider(requireActivity())[SharedViewModel_Property::class.java]
 
         //shared viewModels
-        my_property_viewModel.my_property.observe(viewLifecycleOwner, Observer {
-            property__id = it
+        propertyViewmodel.my_property.observe(viewLifecycleOwner, Observer {
+            mPropertyId = it
         })
 
         get_all_data()
     }
 
     private fun empty_image_from_firestorage() {
-        //image_url.clear()
+        //propertyImagesUrl.clear()
         Toast.makeText(
             context,
             "image not deleted yet from cloud, see you in the next version",
@@ -253,70 +249,70 @@ class Fragment_Property_View_Update : Fragment() {
 
         try {
             withContext(Dispatchers.Main) {
-                val documentSnapshot = post_apartment_ref.document(property__id).get().await()
-                val apartment = documentSnapshot.toObject(Property::class.java)
-                apartment?.let {
+                val documentSnapshot = post_apartment_ref.document(mPropertyId).get().await()
+                val property = documentSnapshot.toObject(Property::class.java)
+                property?.let {
                     //get values
-                    number_bedrooms = apartment.number_bedrooms
-                    number_bathrooms = apartment.number_bathrooms
-                    property_size = apartment.property_size
-                    property_price = apartment.property_price
-                    property_type = apartment.property_type
-                    property_place = apartment.property_place
-                    property_description = apartment.property_description
-                    property_id = apartment.property_id
-                    check_balcony = apartment.has_balcony
-                    check_garage = apartment.has_garage
-                    check_bath = apartment.has_bath_place
-                    check_dinning = apartment.has_dinner_room
-                    check_baby = apartment.has_bedroom_baby
-                    check_tv = apartment.has_tv_room
-                    image_url = apartment.image_url
+                    propertyBedroomsNumber = property.propertyBedroomsNumber
+                    propertyBathroomsNumber = property.propertyBathroomsNumber
+                    propertySize = property.propertySize
+                    propertyPrice = property.propertyPrice
+                    propertyType = property.propertyType
+                    propertyPlace = property.propertyPlace!!
+                    propertyDescription = property.propertyDescription
+                    propertyId = property.propertyId
+                    propertyHasBalcony = property.propertyHasBalcony
+                    propertyHasGarage = property.propertyHasGarage
+                    propertyHasBathPlace = property.propertyHasBathPlace
+                    propertyHasDiningRoom = property.propertyHasDiningRoom
+                    propertyHasBabyBedroom = property.propertyHasBabyBedroom
+                    propertyHasTVRoom = property.propertyHasTVRoom
+                    propertyImagesUrl = property.propertyImagesUrl
 
                     //set values
-                    binding.propertyPriceEdt.setText(property_price.toString())
-                    binding.propertySizeEdt.setText(property_size.toString())
-                    binding.addDescriptionEdt.setText(property_description)
-                    //property_type
-                    var checked_property_type_id = 0
-                    when (property_type) {
-                        "apartment" -> checked_property_type_id = R.id.apartment_rb
-                        "home" -> checked_property_type_id = R.id.home_rb
+                    binding.propertyPriceEdt.setText(propertyPrice.toString())
+                    binding.propertySizeEdt.setText(propertySize.toString())
+                    binding.addDescriptionEdt.setText(propertyDescription)
+                    //propertyType
+                    var checkedPropertyTypeId = 0
+                    when (propertyType) {
+                        "apartment" -> checkedPropertyTypeId = R.id.apartment_rb
+                        "home" -> checkedPropertyTypeId = R.id.home_rb
                     }
-                    binding.propertyTypeRg.check(checked_property_type_id)
+                    binding.propertyTypeRg.check(checkedPropertyTypeId)
 
                     //bed numbers
-                    var checked_number_bedrooms_id = 0
-                    when (number_bedrooms) {
-                        0 -> checked_number_bedrooms_id = R.id.studio_rb
-                        1 -> checked_number_bedrooms_id = R.id.one_bed_rb
-                        2 -> checked_number_bedrooms_id = R.id.two_bed_rb
-                        3 -> checked_number_bedrooms_id = R.id.three_bed_rb
-                        4 -> checked_number_bedrooms_id = R.id.four_bed_rb
+                    var checkedPropertyBedroomsNumberId = 0
+                    when (propertyBedroomsNumber) {
+                        0 -> checkedPropertyBedroomsNumberId = R.id.studio_rb
+                        1 -> checkedPropertyBedroomsNumberId = R.id.one_bed_rb
+                        2 -> checkedPropertyBedroomsNumberId = R.id.two_bed_rb
+                        3 -> checkedPropertyBedroomsNumberId = R.id.three_bed_rb
+                        4 -> checkedPropertyBedroomsNumberId = R.id.four_bed_rb
                     }
-                    binding.bedroomRg.check(checked_number_bedrooms_id)
+                    binding.bedroomRg.check(checkedPropertyBedroomsNumberId)
 
                     //bath numbers
-                    var checked_number_bathrooms_id = 0
-                    when (number_bathrooms) {
-                        1 -> checked_number_bathrooms_id = R.id.one_bath_rb
-                        2 -> checked_number_bathrooms_id = R.id.two_bath_rb
-                        3 -> checked_number_bathrooms_id = R.id.three_bath_rb
-                        4 -> checked_number_bathrooms_id = R.id.four_bath_rb
+                    var checkedPropertyBathroomsNumberId = 0
+                    when (propertyBathroomsNumber) {
+                        1 -> checkedPropertyBathroomsNumberId = R.id.one_bath_rb
+                        2 -> checkedPropertyBathroomsNumberId = R.id.two_bath_rb
+                        3 -> checkedPropertyBathroomsNumberId = R.id.three_bath_rb
+                        4 -> checkedPropertyBathroomsNumberId = R.id.four_bath_rb
                     }
-                    binding.bathroomRg.check(checked_number_bathrooms_id)
+                    binding.bathroomRg.check(checkedPropertyBathroomsNumberId)
 
                     //facilities
-                    binding.bathRb.isChecked = check_bath
-                    binding.diningRoomRb.isChecked = check_dinning
-                    binding.garageRb.isChecked = check_garage
-                    binding.balconyRb.isChecked = check_balcony
-                    binding.bedroomBabyRb.isChecked = check_baby
-                    binding.tvRoomRb.isChecked = check_tv
+                    binding.bathRb.isChecked = propertyHasBathPlace
+                    binding.diningRoomRb.isChecked = propertyHasDiningRoom
+                    binding.garageRb.isChecked = propertyHasGarage
+                    binding.balconyRb.isChecked = propertyHasBalcony
+                    binding.bedroomBabyRb.isChecked = propertyHasBabyBedroom
+                    binding.tvRoomRb.isChecked = propertyHasTVRoom
 
                     //images
-                    val adapter_loaded_images = Recycler_Adapter_Loaded_Image_Url(image_url)
-                    binding.imagesAddedListRecyclerview.adapter = adapter_loaded_images
+                    val recyclerAdapterLoadedImageUrl = Recycler_Adapter_Loaded_Image_Url(propertyImagesUrl)
+                    binding.imagesAddedListRecyclerview.adapter = recyclerAdapterLoadedImageUrl
                 }
             }
         } catch (e: Exception) {
@@ -331,45 +327,45 @@ class Fragment_Property_View_Update : Fragment() {
         val user = auth.currentUser
 
         try {
-            if (image_list.size > 0) {
+            if (imageList.size > 0) {
 
-                for (i in 0..(image_list.size - 1)) {
-                    val imageuri: Uri? = image_list[i]
+                for (i in 0..(imageList.size - 1)) {
+                    val imageUri: Uri? = imageList[i]
 
                     val storageReference = FirebaseStorage.getInstance()
-                        .getReference("Post Images/" + user?.uid + "/images for " + property_id)
-                        .child(image_name_list[i])
+                        .getReference("Post Images/" + user?.uid + "/images for " + propertyId)
+                        .child(imageNameList[i])
 
-                    val uploadTask = imageuri?.let { storageReference.putFile(it).await() }
-                    val my_url = uploadTask?.storage?.downloadUrl?.await()
+                    val uploadTask = imageUri?.let { storageReference.putFile(it).await() }
+                    val myUrl = uploadTask?.storage?.downloadUrl?.await()
 
-                    image_url.add(my_url.toString())
+                    propertyImagesUrl.add(myUrl.toString())
                 }
                 //without this, we will get error for the progressDialog:
                 //Can't create handler inside thread that has not called Looper.prepare()
                 withContext(Dispatchers.Main) {
                     Toast.makeText(context, "Update with New Images", Toast.LENGTH_SHORT).show()
                     val update: MutableMap<String, Any> = HashMap()
-                    update["property_type"] = property_type
-                    update["property_size"] = property_size
-                    update["property_price"] = property_price
-                    update["number_bedrooms"] = number_bedrooms
-                    update["number_bathrooms"] = number_bathrooms
-                    update["check_bath"] = check_bath
-                    update["check_dinning"] = check_dinning
-                    update["check_garage"] = check_garage
-                    update["check_balcony"] = check_balcony
-                    update["check_baby"] = check_baby
-                    update["check_tv"] = check_tv
-                    update["property_place"] = property_place
-                    update["property_description"] = property_description
-                    update["image_url"] = image_url
-                    apply_and_update(update)
+                    update["propertyType"] = propertyType
+                    update["propertySize"] = propertySize
+                    update["propertyPrice"] = propertyPrice
+                    update["propertyBedroomsNumber"] = propertyBedroomsNumber
+                    update["propertyBathroomsNumber"] = propertyBathroomsNumber
+                    update["propertyHasBathPlace"] = propertyHasBathPlace
+                    update["propertyHasDiningRoom"] = propertyHasDiningRoom
+                    update["propertyHasGarage"] = propertyHasGarage
+                    update["propertyHasBalcony"] = propertyHasBalcony
+                    update["propertyHasBabyBedroom"] = propertyHasBabyBedroom
+                    update["propertyHasTVRoom"] = propertyHasTVRoom
+                    update["propertyPlace"] = propertyPlace
+                    update["propertyDescription"] = propertyDescription
+                    update["propertyImagesUrl"] = propertyImagesUrl
+                    applyAndUpdate(update)
                 }
             } else {
 
                 withContext(Dispatchers.Main) {
-                    if (image_url.isEmpty()) {
+                    if (propertyImagesUrl.isEmpty()) {
                         progressDialog.dismiss()
                         Toast.makeText(context, "You've to set new Images", Toast.LENGTH_SHORT)
                             .show()
@@ -377,20 +373,20 @@ class Fragment_Property_View_Update : Fragment() {
                     }
                     Toast.makeText(context, "Update without New Images", Toast.LENGTH_SHORT).show()
                     val update: MutableMap<String, Any> = HashMap()
-                    update["property_type"] = property_type
-                    update["property_size"] = property_size
-                    update["property_price"] = property_price
-                    update["number_bedrooms"] = number_bedrooms
-                    update["number_bathrooms"] = number_bathrooms
-                    update["check_bath"] = check_bath
-                    update["check_dinning"] = check_dinning
-                    update["check_garage"] = check_garage
-                    update["check_balcony"] = check_balcony
-                    update["check_baby"] = check_baby
-                    update["check_tv"] = check_tv
-                    update["property_place"] = property_place
-                    update["property_description"] = property_description
-                    apply_and_update(update)
+                    update["propertyType"] = propertyType
+                    update["propertySize"] = propertySize
+                    update["propertyPrice"] = propertyPrice
+                    update["propertyBedroomsNumber"] = propertyBedroomsNumber
+                    update["propertyBathroomsNumber"] = propertyBathroomsNumber
+                    update["propertyHasBathPlace"] = propertyHasBathPlace
+                    update["propertyHasDiningRoom"] = propertyHasDiningRoom
+                    update["propertyHasGarage"] = propertyHasGarage
+                    update["propertyHasBalcony"] = propertyHasBalcony
+                    update["propertyHasBabyBedroom"] = propertyHasBabyBedroom
+                    update["propertyHasTVRoom"] = propertyHasTVRoom
+                    update["propertyPlace"] = propertyPlace
+                    update["propertyDescription"] = propertyDescription
+                    applyAndUpdate(update)
                 }
             }
         } catch (e: Exception) {
@@ -401,12 +397,11 @@ class Fragment_Property_View_Update : Fragment() {
         }
     }
 
-    private fun apply_and_update(update: MutableMap<String, Any>) =
+    private fun applyAndUpdate(update: MutableMap<String, Any>) =
         CoroutineScope(Dispatchers.IO).launch {
-            val user = auth.currentUser
 
             try {
-                post_apartment_ref.document(property_id).update(update).await()
+                post_apartment_ref.document(propertyId).update(update).await()
                 //vu qu'on ne peu acceder au UI dans un coroutine on use withContext
                 withContext(Dispatchers.Main) {
                     progressDialog.dismiss()
@@ -441,14 +436,14 @@ class Fragment_Property_View_Update : Fragment() {
                 val count = clipdata.itemCount
                 var currentImageSelect = 0
                 while (currentImageSelect < count) {
-                    val imageuri: Uri = clipdata.getItemAt(currentImageSelect).uri
-                    val imagename = "image_$currentImageSelect"
-                    image_list.add(imageuri)
-                    image_name_list.add(imagename)
+                    val imageUri: Uri = clipdata.getItemAt(currentImageSelect).uri
+                    val imageName = "image_$currentImageSelect"
+                    imageList.add(imageUri)
+                    imageNameList.add(imageName)
                     currentImageSelect += 1
                 }
-                val adapter_loaded_images = Recycler_Adapter_Loaded_Image_Uri(image_list)
-                binding.imagesAddedListRecyclerview.adapter = adapter_loaded_images
+                val adapterLoadedImages = Recycler_Adapter_Loaded_Image_Uri(imageList)
+                binding.imagesAddedListRecyclerview.adapter = adapterLoadedImages
                 binding.selectedImagesTv.visibility = View.VISIBLE
                 binding.addOrChangeTv.text = "Change Image(s)"
 
@@ -459,10 +454,8 @@ class Fragment_Property_View_Update : Fragment() {
 
         if ((requestCode == PLACE_PICKER_REQUEST) && (resultCode == Activity.RESULT_OK)) {
             val place: Place? = PingPlacePicker.getPlace(data!!)
-            property_place = place!!
-            binding.locationSelectedTv.text = "You selected: ${place?.name}"
-            Log.d("++++++ : ", "address : ${place?.address}, latlng : ${place?.latLng}, photo : ${place?.name}")
-            //Toast.makeText(context, "You selected: ${place?.name}", Toast.LENGTH_LONG).show()
+            propertyPlace = place!!
+            binding.locationSelectedTv.text = "You selected: ${place.name}"
         }
     }
 

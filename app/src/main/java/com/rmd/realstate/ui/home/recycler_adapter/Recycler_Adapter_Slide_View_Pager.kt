@@ -8,7 +8,7 @@ import com.rmd.realstate.R
 import com.rmd.realstate.databinding.RawImageSliderBinding
 import com.squareup.picasso.Picasso
 
-class Recycler_Adapter_Slide_View_Pager(private var pager_image_list: ArrayList<String>) :
+class Recycler_Adapter_Slide_View_Pager(private var pagerImageList: ArrayList<String>) :
     RecyclerView.Adapter<Recycler_Adapter_Slide_View_Pager.View_Pager>() {
 
     inner class View_Pager(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -26,11 +26,11 @@ class Recycler_Adapter_Slide_View_Pager(private var pager_image_list: ArrayList<
         binding = RawImageSliderBinding.bind(holder.itemView)
 
         holder.itemView.apply {
-            Picasso.get().load(pager_image_list[position]).fit().into(binding.imageSlider)
+            Picasso.get().load(pagerImageList[position]).fit().into(binding.imageSlider)
         }
     }
 
     override fun getItemCount(): Int {
-        return pager_image_list.size
+        return pagerImageList.size
     }
 }
