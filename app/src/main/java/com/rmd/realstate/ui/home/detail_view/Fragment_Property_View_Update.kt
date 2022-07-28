@@ -28,6 +28,7 @@ import com.rmd.realstate.R
 import com.rmd.realstate.activity.Activity_Login_or_Register
 import com.rmd.realstate.databinding.FragmentPostBinding
 import com.rmd.realstate.model.Property
+import com.rmd.realstate.model.PropertyPlace
 import com.rmd.realstate.ui.home.recycler_adapter.Recycler_Adapter_Loaded_Image_Url
 import com.rmd.realstate.ui.post.recycler_adapter.Recycler_Adapter_Loaded_Image_Uri
 import com.rmd.realstate.view_model.SharedViewModel_Property
@@ -50,7 +51,7 @@ class Fragment_Property_View_Update : Fragment() {
     private val post_apartment_ref = FirebaseFirestore.getInstance()
         .collection("property")
 
-    private val PICK_IMAGE_REQUEST = 1234
+    private val PICK_IMAGE_REQUEST = 1
     private var imageList = ArrayList<Uri?>()
     private var imageNameList = ArrayList<String>()
     private var propertyImagesUrl = ArrayList<String>()
@@ -59,7 +60,7 @@ class Fragment_Property_View_Update : Fragment() {
     private var propertySize = 0
     private var propertyPrice = 0
     private var propertyType = "apartment"
-    private lateinit var propertyPlace: Place
+    private var propertyPlace : PropertyPlace? = null
     private var propertyDescription = ""
     private var propertyId = ""
     private var propertyHasBalcony = false
@@ -357,7 +358,7 @@ class Fragment_Property_View_Update : Fragment() {
                     update["propertyHasBalcony"] = propertyHasBalcony
                     update["propertyHasBabyBedroom"] = propertyHasBabyBedroom
                     update["propertyHasTVRoom"] = propertyHasTVRoom
-                    update["propertyPlace"] = propertyPlace
+                    update[propertyPlace!!.placeAddress] = propertyPlace?.placeAddress.toString()
                     update["propertyDescription"] = propertyDescription
                     update["propertyImagesUrl"] = propertyImagesUrl
                     applyAndUpdate(update)
@@ -384,7 +385,7 @@ class Fragment_Property_View_Update : Fragment() {
                     update["propertyHasBalcony"] = propertyHasBalcony
                     update["propertyHasBabyBedroom"] = propertyHasBabyBedroom
                     update["propertyHasTVRoom"] = propertyHasTVRoom
-                    update["propertyPlace"] = propertyPlace
+                    update[propertyPlace!!.placeAddress] = propertyPlace?.placeAddress.toString()
                     update["propertyDescription"] = propertyDescription
                     applyAndUpdate(update)
                 }
@@ -454,8 +455,16 @@ class Fragment_Property_View_Update : Fragment() {
 
         if ((requestCode == PLACE_PICKER_REQUEST) && (resultCode == Activity.RESULT_OK)) {
             val place: Place? = PingPlacePicker.getPlace(data!!)
-            propertyPlace = place!!
-            binding.locationSelectedTv.text = "You selected: ${place.name}"
+            if (place != null) {
+                propertyPlace = PropertyPlace(
+                    place.id!!.toString(),
+                    place.name!!.toString(),
+                    place.address!!.toString(),
+                    place.latLng!!.latitude,
+                    place.latLng!!.longitude
+                )
+            }
+            binding.locationSelectedTv.text = "You selected: ${propertyPlace?.placeName}"
         }
     }
 

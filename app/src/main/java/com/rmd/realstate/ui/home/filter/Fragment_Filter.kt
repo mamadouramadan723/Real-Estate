@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -17,7 +14,7 @@ import com.rmd.realstate.model.Filter
 import com.rmd.realstate.view_model.SharedViewModel_Filter
 
 
-class Fragment_Filter : Fragment(), AdapterView.OnItemSelectedListener {
+class Fragment_Filter : Fragment() {
 
     //variable declaration
     private lateinit var binding: FragmentFilterBinding
@@ -54,10 +51,6 @@ class Fragment_Filter : Fragment(), AdapterView.OnItemSelectedListener {
         binding = FragmentFilterBinding.bind(view)
         filter_shared_viewModel =
             ViewModelProvider(requireActivity())[SharedViewModel_Filter::class.java]
-
-        //spinners
-        binding.spinnerRegion.onItemSelectedListener = this
-        binding.spinnerCity.onItemSelectedListener = this
 
         // Setup the new range seek bar
         binding.rangePriceSeekBar.setRangeValues(1000, 20000)
@@ -147,139 +140,4 @@ class Fragment_Filter : Fragment(), AdapterView.OnItemSelectedListener {
                 .navigate(R.id.action_navigation_filter_to_navigation_home)
         }
     }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        parent as Spinner
-        when (parent.id) {
-            R.id.spinner_region -> {
-                property_region = parent.getItemAtPosition(position).toString()
-                when (position) {
-                    0 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_BeniMellalKhénifra)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    1 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_CasablancaSettat)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    2 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_DraaTafilalet)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    3 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_EdDakhlaOuededDahab)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    4 -> {
-                        val list_default_city = resources.getStringArray(R.array.ville_FesMeknes)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    5 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_GuelmimOuedNoun)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    6 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_LaayouneSaguiaalHamra)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    7 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_MarrakechSafi)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    8 -> {
-                        val list_default_city = resources.getStringArray(R.array.ville_Oriental)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    9 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_RabatSaleKenitra)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    10 -> {
-                        val list_default_city = resources.getStringArray(R.array.ville_SousMassa)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                    11 -> {
-                        val list_default_city =
-                            resources.getStringArray(R.array.ville_TangerTetouanAlHoceima)
-                        val adapter_city = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            list_default_city
-                        )
-                        binding.spinnerCity.adapter = adapter_city
-                    }
-                }
-            }
-            R.id.spinner_city -> {
-                property_city = parent.getItemAtPosition(position).toString()
-            }
-        }
-    }
-
-    override fun onNothingSelected(p0: AdapterView<*>?) {
-    }
-
 }

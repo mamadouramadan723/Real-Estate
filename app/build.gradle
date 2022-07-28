@@ -59,7 +59,7 @@ dependencies {
     //maps
     // Places library
     implementation 'com.google.android.libraries.places:places:2.6.0'
-    // PING Place Picker
+    // PING PropertyPlace Picker
     implementation 'com.github.rtchagas:pingplacepicker:2.6.0'
 
     //coroutine

@@ -91,7 +91,7 @@ class Fragment_Saved : Fragment() {
 
                         if (map.containsKey(user.uid)) {
 
-                            val propertyId = map.getValue("post_id").toString()
+                            val propertyId = map.getValue("propertyId").toString()
                             val myDocumentSnapshot =
                                 propertyRef.document(propertyId).get().await()
                             val apartment = myDocumentSnapshot.toObject(Property::class.java)

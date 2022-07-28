@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import com.rmd.realstate.R
 import com.rmd.realstate.activity.Activity_Login_or_Register
 import com.rmd.realstate.databinding.FragmentPostBinding
 import com.rmd.realstate.model.Property
+import com.rmd.realstate.model.PropertyPlace
 import com.rmd.realstate.ui.post.recycler_adapter.Recycler_Adapter_Loaded_Image_Uri
 import com.rtchagas.pingplacepicker.PingPlacePicker
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +51,7 @@ class Fragment_Post : Fragment() {
     private var propertyDescription: String = ""
     private var propertyOwnerUserId: String = ""
     private var propertyOwnerPhoneNumber: String = ""
-    private var propertyPlace: Place? = null
+    private var propertyPlace: PropertyPlace? = null
     private var propertySize: Int = 0
     private var propertyPrice: Int = 0
     private var propertyScore: Int = 0
@@ -256,6 +258,9 @@ class Fragment_Post : Fragment() {
                     propertyImagesUrl
                 )
 
+                val stringBuilder = StringBuilder()
+                stringBuilder.append("$propertyToPublish")
+                Log.d("**+++---appart98", "$stringBuilder")
                 apply_and_publish(propertyToPublish)
             }
 
@@ -348,8 +353,18 @@ class Fragment_Post : Fragment() {
         }
         if ((requestCode == PLACE_PICKER_REQUEST) && (resultCode == Activity.RESULT_OK)) {
             val place: Place? = PingPlacePicker.getPlace(data!!)
-            propertyPlace = place
-            binding.locationSelectedTv.text = "You selected the location at : ${place?.address}"
+
+            if (place != null) {
+                propertyPlace = PropertyPlace(
+                    place.id!!.toString(),
+                    place.name!!.toString(),
+                    place.address!!.toString(),
+                    place.latLng!!.latitude,
+                    place.latLng!!.longitude
+                )
+            }
+
+            binding.locationSelectedTv.text = "You selected the location at : ${propertyPlace?.placeAddress}"
         }
     }
 

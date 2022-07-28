@@ -1,14 +1,12 @@
 package com.rmd.realstate.model
 
-import com.google.android.libraries.places.api.model.Place
-
 data class Property(
     var propertyId: String = "",
     var propertyType: String = "",
     var propertyDescription: String = "",
     var propertyOwnerUserId: String = "",
     var propertyOwnerPhoneNumber: String = "",
-    var propertyPlace: Place? = null,
+    var propertyPlace: PropertyPlace? = null,
     var propertySize: Int = 0,
     var propertyPrice: Int = 0,
     var propertyScore: Int = 0,

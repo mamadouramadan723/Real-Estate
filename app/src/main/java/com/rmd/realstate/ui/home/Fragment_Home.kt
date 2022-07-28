@@ -170,16 +170,21 @@ class Fragment_Home : Fragment() {
         apartmentList.clear()
         homeList.clear()
 
-        try {
-            val myQuerySnapshot = propertyRef.get().await()
+        Log.d("+++---appart1", "------")
 
-            /*val stringBuilder = StringBuilder()
-            stringBuilder.append("${myQuerySnapshot.documents.toObject(Property::class.java)}")
-            Log.d("+++--", "$stringBuilder")*/
+        try {
+            Log.d("+++---appart2", "------")
+            val myQuerySnapshot = propertyRef.get().await()
+            Log.d("+++---appart2", "------")
 
             myQuerySnapshot.documents.mapNotNull { documentSnapshot ->
+                Log.d("+++---appart3", "------")
 
                 val apartment = documentSnapshot.toObject(Property::class.java)
+                Log.d("+++---appart4", "------")
+                val stringBuilder = StringBuilder()
+                stringBuilder.append("$apartment")
+                Log.d("+++---appart", "$stringBuilder")
 
                 apartment?.let {
                     when (apartment.propertyType) {

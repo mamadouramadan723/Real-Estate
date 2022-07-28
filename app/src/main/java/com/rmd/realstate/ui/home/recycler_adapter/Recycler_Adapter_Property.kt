@@ -29,6 +29,7 @@ class Recycler_Adapter_Property(
     inner class Property_ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     private lateinit var sharedViewModelProperty: SharedViewModel_Property
+
     private var allProperties = ArrayList<Property>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Property_ViewHolder {
@@ -49,7 +50,7 @@ class Recycler_Adapter_Property(
         holder.itemView.apply {
 
             binding.apartmentSurface.text = propertyList[position].propertySize.toString()
-            binding.apartmentLocationTv.text = propertyList[position].propertyPlace?.address
+            binding.apartmentLocationTv.text = propertyList[position].propertyPlace?.placeAddress
             binding.apartmentBedNumber.text =
                 propertyList[position].propertyBedroomsNumber.toString()
             binding.apartmentPriceTv.text =
@@ -89,7 +90,7 @@ class Recycler_Adapter_Property(
                 temp_list.addAll(allProperties)
             } else {
                 for (item in allProperties) {
-                    /*if (item.propertyPlace?.address?.lowercase(Locale.getDefault())
+                    /*if (item.PropertyPlace?.address?.lowercase(Locale.getDefault())
                             .contains(search_text)
                         || item.property_description.lowercase(Locale.getDefault())
                             .contains(search_text)
