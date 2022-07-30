@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.rmd.realstate.R
 import com.rmd.realstate.activity.Activity_Login_or_Register
 import com.rmd.realstate.databinding.FragmentPostBinding
+import com.rmd.realstate.model.LatLong
 import com.rmd.realstate.model.Property
 import com.rmd.realstate.model.PropertyPlace
 import com.rmd.realstate.ui.post.recycler_adapter.Recycler_Adapter_Loaded_Image_Uri
@@ -47,7 +47,7 @@ class Fragment_Post : Fragment() {
     private var imageList = ArrayList<Uri?>()
     private var imageNameList = ArrayList<String>()
     private var propertyId: String = ""
-    private var propertyType: String = ""
+    private var propertyType: String = "apartment"
     private var propertyDescription: String = ""
     private var propertyOwnerUserId: String = ""
     private var propertyOwnerPhoneNumber: String = ""
@@ -203,7 +203,6 @@ class Fragment_Post : Fragment() {
             }
 
             propertyDescription = binding.addDescriptionEdt.text.toString()
-
             propertyId = "${System.currentTimeMillis()}__$propertyOwnerUserId"
 
             progressDialog.setMessage("uploading...")
@@ -257,10 +256,6 @@ class Fragment_Post : Fragment() {
                     propertyHasBedroomBaby,
                     propertyImagesUrl
                 )
-
-                val stringBuilder = StringBuilder()
-                stringBuilder.append("$propertyToPublish")
-                Log.d("**+++---appart98", "$stringBuilder")
                 apply_and_publish(propertyToPublish)
             }
 
@@ -355,12 +350,12 @@ class Fragment_Post : Fragment() {
             val place: Place? = PingPlacePicker.getPlace(data!!)
 
             if (place != null) {
+                val latLng = LatLong(place.latLng!!.latitude, place.latLng!!.longitude )
                 propertyPlace = PropertyPlace(
                     place.id!!.toString(),
                     place.name!!.toString(),
                     place.address!!.toString(),
-                    place.latLng!!.latitude,
-                    place.latLng!!.longitude
+                    latLng
                 )
             }
 

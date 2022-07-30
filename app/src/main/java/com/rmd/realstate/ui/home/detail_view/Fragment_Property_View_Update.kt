@@ -27,6 +27,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.rmd.realstate.R
 import com.rmd.realstate.activity.Activity_Login_or_Register
 import com.rmd.realstate.databinding.FragmentPostBinding
+import com.rmd.realstate.model.LatLong
 import com.rmd.realstate.model.Property
 import com.rmd.realstate.model.PropertyPlace
 import com.rmd.realstate.ui.home.recycler_adapter.Recycler_Adapter_Loaded_Image_Url
@@ -455,13 +456,14 @@ class Fragment_Property_View_Update : Fragment() {
 
         if ((requestCode == PLACE_PICKER_REQUEST) && (resultCode == Activity.RESULT_OK)) {
             val place: Place? = PingPlacePicker.getPlace(data!!)
+
             if (place != null) {
+                val latLng = LatLong(place.latLng!!.latitude, place.latLng!!.longitude )
                 propertyPlace = PropertyPlace(
                     place.id!!.toString(),
                     place.name!!.toString(),
                     place.address!!.toString(),
-                    place.latLng!!.latitude,
-                    place.latLng!!.longitude
+                    latLng
                 )
             }
             binding.locationSelectedTv.text = "You selected: ${propertyPlace?.placeName}"

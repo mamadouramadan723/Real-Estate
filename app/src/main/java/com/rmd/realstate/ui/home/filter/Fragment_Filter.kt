@@ -126,6 +126,10 @@ class Fragment_Filter : Fragment() {
             check_tv = !check_tv
             binding.tvRoomRb.isChecked = check_tv
         }
+        binding.chooseLocationBtn.setOnClickListener {
+            NavHostFragment.findNavController(this)
+                .navigate(R.id.action_navigation_filter_to_navigation_explorer)
+        }
 
         binding.applyAndSearchBtn.setOnClickListener {
             applied_property = Filter(

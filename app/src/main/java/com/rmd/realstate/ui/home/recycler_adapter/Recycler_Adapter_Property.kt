@@ -50,7 +50,7 @@ class Recycler_Adapter_Property(
         holder.itemView.apply {
 
             binding.apartmentSurface.text = propertyList[position].propertySize.toString()
-            binding.apartmentLocationTv.text = propertyList[position].propertyPlace?.placeAddress
+            binding.apartmentLocationTv.text = propertyList[position].propertyPlace?.placeAddress.toString()
             binding.apartmentBedNumber.text =
                 propertyList[position].propertyBedroomsNumber.toString()
             binding.apartmentPriceTv.text =

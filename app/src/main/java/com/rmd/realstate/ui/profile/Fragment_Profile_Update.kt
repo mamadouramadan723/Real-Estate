@@ -186,22 +186,8 @@ class Fragment_Profile_Update : Fragment() {
             return
         }
 
-        if (myMail.isNotEmpty())
-            map["userMail"] = myMail
-        else {
-            Toast.makeText(context, "mail must not be empty", Toast.LENGTH_LONG).show()
-            progressDialog.dismiss()
-            return
-        }
-
-        if (myPhoneNumber.isNotEmpty())
-            map["userPhoneNumber"] = myPhoneNumber
-        else {
-            Toast.makeText(context, "phone number must not be empty", Toast.LENGTH_LONG).show()
-            progressDialog.dismiss()
-            return
-        }
-
+        map["userMail"] = myMail
+        map["userPhoneNumber"] = myPhoneNumber
         map["userImageUrl"] = imageUrl
 
         //then update

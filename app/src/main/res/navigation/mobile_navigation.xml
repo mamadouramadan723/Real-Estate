@@ -83,5 +83,17 @@
         <action
             android:id="@+id/action_navigation_filter_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_filter_to_navigation_explorer"
+            app:destination="@id/navigation_explorer" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_explorer"
+        android:name="com.rmd.realstate.ui.home.filter.Fragment_Explorer"
+        android:label="@string/menu_explore"
+        tools:layout="@layout/fragment_explorer" >
+        <action
+            android:id="@+id/action_navigation_explorer_to_navigation_filter"
+            app:destination="@id/navigation_filter" />
     </fragment>
 </navigation>
