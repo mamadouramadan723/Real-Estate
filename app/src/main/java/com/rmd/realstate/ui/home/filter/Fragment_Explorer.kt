@@ -8,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -86,18 +88,30 @@ class Fragment_Explorer : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClic
                 propertyList[i].propertyPlace?.placeLng?.placeLat!!,
                 propertyList[i].propertyPlace?.placeLng?.placeLng!!
             )
+            val icon: BitmapDescriptor = when (propertyList[i].propertyType) {
+                "home" -> homeIcon
+                "apartment" -> apartmentIcon
+                else -> apartmentIcon
+            }
             val markerOptions = MarkerOptions()
                 .position(latLng)
                 .title(propertyList[i].propertyPlace?.placeName)
-
-            val stringBuilder = StringBuilder()
-                stringBuilder.append("$markerOptions")
-                Log.d("+++--${propertyList.size - 1}", propertyList[i].propertyPlace?.placeName!!)
+                .icon(icon)
 
             map.addMarker(markerOptions)
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
         }
         setUpMap()
+    }
+
+    private val apartmentIcon: BitmapDescriptor by lazy {
+        val color = ContextCompat.getColor(requireContext(), R.color.red)
+        BitmapHelper.vectorToBitmap(requireContext(), R.drawable.ic_apartment, color)
+    }
+
+    private val homeIcon: BitmapDescriptor by lazy {
+        val color = ContextCompat.getColor(requireContext(), R.color.red)
+        BitmapHelper.vectorToBitmap(requireContext(), R.drawable.ic_home, color)
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
